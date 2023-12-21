@@ -1,5 +1,5 @@
 from Objects import Warehouse
-from math import sqrt
+from math import sqrt, ceil
 
 
 class Drone:
@@ -21,4 +21,5 @@ class Drone:
         pass
 
     def calc_dist(self, destination: tuple[int, int]):
-        sqrt((destination[0] - self.position[0]) ** 2 + (destination[1] - self.position[1]) ** 2)
+        return ceil(sqrt((destination[0] - self.position[0]) ** 2 +
+                         (destination[1] - self.position[1]) ** 2))
