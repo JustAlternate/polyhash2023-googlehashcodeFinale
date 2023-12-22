@@ -10,6 +10,7 @@ Utilisation du "issues_board" de gitlab pour la gestion des tickets, et politiqu
 
 - Théo Masselot - theo.masselot@etu.univ-nantes.fr
 - Loïc Weber - loic.weber@etu.univ-nantes.fr
+- Amedeo Calcagni - amedeo.calcagni@etu.univ-nantes.fr
 
 ## Fonctionnement du projet
 ========================
