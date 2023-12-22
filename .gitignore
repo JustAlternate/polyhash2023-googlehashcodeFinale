@@ -12,6 +12,3 @@ ENV/
 *.vscode
 *.idea
 
-# pour avoir les consignes dans le dossier
-/polyhash2023.pdf
-

@@ -7,4 +7,4 @@
 def solve(challenge):
     """Résout un challenge donné.
     """
-    print(challenge)
+    return a_solution
