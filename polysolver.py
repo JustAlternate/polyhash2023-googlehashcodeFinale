@@ -46,8 +46,13 @@ def naive_approach_loic(challenge):
     Solution = []
     Map = parse_challenge(challenge)
 
-    current_drone = Map.drones[0]
+    current_drone_index = 0
     for index_order in range(len(Map.orders)):
+
+        # We change drone for a new order
+        current_drone_index = (current_drone_index + 1) % (len(Map.drones))
+        print(current_drone_index)
+        current_drone = Map.drones[current_drone_index]
         current_order = Map.orders[index_order]
 
         for product_type in range(len(current_order.products_qty)):
@@ -72,7 +77,8 @@ def naive_approach_loic(challenge):
                 current_warehouse = Map.warehouses[index_warehouse]
 
                 Solution.append(
-                    "0 L "
+                    str(current_drone_index)
+                    + " L "
                     + str(index_warehouse)
                     + " "
                     + str(product_type)
@@ -83,7 +89,8 @@ def naive_approach_loic(challenge):
                 current_warehouse.stock[product_type] -= quantity_able_to_load
 
                 Solution.append(
-                    "0 D "
+                    str(current_drone_index)
+                    + " D "
                     + str(index_order)
                     + " "
                     + str(product_type)
@@ -96,12 +103,3 @@ def naive_approach_loic(challenge):
                 current_order.products_qty[product_type] -= quantity_able_to_load
 
     return Solution
-
-
-print(naive_approach_loic("challenges/a_example.in"))
-# print("============")
-# naive_approach_loic("challenges/b_busy_day.in")
-# print("============")
-# naive_approach_loic("challenges/c_redudancy.in")
-# print("============")
-# naive_approach_loic("challenges/d_mother_of_all_warehouses.in")
