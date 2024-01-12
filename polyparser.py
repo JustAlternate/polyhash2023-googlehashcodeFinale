@@ -12,15 +12,15 @@ def parse_challenge(filename: str) -> object:
     Vous pouvez choisir la structure de données structurées qui va
     représenter votre challenge: dictionnaire, objet, etc
     """
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         # Read infos map
         rows, columns, drone_count, deadline, max_load = [
-            int(v) for v in f.readline().split()]
+            int(v) for v in f.readline().split()
+        ]
         # Read infos product
         nb_product = int(f.readline())
-        type_of_product = [int(v) for v in f.readline().split()]
-        challenge = Map(rows, columns, drone_count,
-                        deadline, max_load, type_of_product)
+        product_weights = [int(v) for v in f.readline().split()]
+        challenge = Map(rows, columns, drone_count, deadline, max_load, product_weights)
 
         # Read infos warehouse
         nb_warehouse = int(f.readline())
@@ -45,7 +45,11 @@ def parse_challenge(filename: str) -> object:
             challenge.orders.append(Order(position, nb_item, item_types))
 
         # Spawn drones at warehouse0 position
-        challenge.drones = [Drone(challenge.warehouses[0].position)
-                            for _ in range(challenge.nb_drones)]
+        challenge.drones = [
+            Drone(
+                challenge.warehouses[0].position, [0 for product in range(nb_product)]
+            )
+            for _ in range(challenge.nb_drones)
+        ]
 
     return challenge
