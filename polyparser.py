@@ -5,6 +5,7 @@ from Objects import *
 """Module de parsing des fichiers d'entrée pour la mise en oeuvre du projet Poly#.
 """
 
+
 def parse_challenge(filename: str) -> object:
     """Lit un fichier de challenge et extrait les informations nécessaires.
 
@@ -42,5 +43,9 @@ def parse_challenge(filename: str) -> object:
             for item in types:
                 item_types[item] += 1
             challenge.orders.append(Order(position, nb_item, item_types))
+
+        # Spawn drones at warehouse0 position
+        challenge.drones = [Drone(challenge.warehouses[0].position)
+                            for _ in range(challenge.nb_drones)]
 
     return challenge

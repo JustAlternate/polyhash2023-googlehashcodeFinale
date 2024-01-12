@@ -42,6 +42,9 @@ def test_parse_challenge():
     assert (m.orders[2].destination == (5, 6))
     assert (m.orders[2].nb_products == 1)
     assert (m.orders[2].products_qty == [0, 0, 1])
+    assert (len(m.drones) == m.nb_drones)
+    for i in range(m.nb_drones):
+        assert (m.drones[i].position == m.warehouses[0].position)
 
     printG("Parser tests COMPLETED")
 
