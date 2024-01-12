@@ -15,14 +15,8 @@
 # https://docs.gitlab.com/ee/development/cicd/templates.html
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+image: python:latest
 
-stages:          # List of stages for jobs, and their order of execution
-  - test
-
-polytests:
-  stage: test    # It only starts when the job in the build stage completes successfully.
-  script:
-    - echo "Running polytests tests... This will take about 60 seconds."
-    - sleep 5
-    - echo "Polytests completed"
-
+run tests:
+    script:
+        - python polytests.py
