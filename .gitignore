@@ -1,6 +1,10 @@
 # Python folders
 __pycache__/
 
+
+# Generated Solutions
+solutions/*
+
 # Environments
 .env
 .venv
