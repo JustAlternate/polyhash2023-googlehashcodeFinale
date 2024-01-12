@@ -1,5 +1,6 @@
 from Objects import *
 
+
 class Map:
 
     def __init__(self, rows: int, cols: int, nb_drones: int, nb_turns: int, max_payload: int,
@@ -11,4 +12,5 @@ class Map:
         self.max_payload: int = max_payload
         self.product_weights: list[int] = product_weights
         self.warehouses: list[Warehouse] = []
+        self.drones: list[Drone] = []
         self.orders: list[Order] = []

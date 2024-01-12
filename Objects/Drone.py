@@ -4,7 +4,7 @@ from math import sqrt, ceil
 
 class Drone:
 
-    def __init__(self, position, stock):
+    def __init__(self, position, stock=[]):
         self.position: tuple[int, int] = position
         self.stock: list[int] = stock
 
