@@ -19,5 +19,5 @@ Description du fonctionnement du projet, notamment comment le lancer (paramètre
 
 La syntaxe générale/minimale est
 
-    polyhash.py ./challenges/challenge.in ./output/sortie.txt
+    polywriter.py naive_loic challenges/a_example.in
 
