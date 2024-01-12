@@ -1,5 +1,6 @@
 from Objects import *
 from polyparser import *
+from polysolver import naive_approach_loic
 
 
 def printR(txt): print("\033[91m {}\033[00m" .format(txt))
@@ -49,6 +50,24 @@ def test_parse_challenge():
     printG("Parser tests COMPLETED")
 
 
+def test_naive_loic():
+    solution = naive_approach_loic("challenges/a_example.in")
+    # Must use set to tests equity between 2 lists.
+    assert (set(solution) == set([
+            '1 L 0 0 1',
+            '1 D 0 0 1',
+            '1 L 1 2 1',
+            '1 D 0 2 1',
+            '2 L 0 0 1',
+            '2 D 1 0 1',
+            '0 L 1 2 1',
+            '0 D 2 2 1'
+            ]))
+
+    printG("Solution naive loic tests COMPLETED")
+
+
 if __name__ == "__main__":
     test_Drone()
     test_parse_challenge()
+    test_naive_loic()
