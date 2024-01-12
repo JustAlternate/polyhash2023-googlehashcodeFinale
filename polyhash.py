@@ -7,7 +7,7 @@
 # Vous pouvez structurer votre code en modules pour améliorer la
 # compréhension et faciliter le travail collaboratif
 from polyparser import parse_challenge
-from polysolver import solve, score_solution, save_solution
+from polysolvers import solve, score_solution, save_solution
 
 if __name__ == "__main__":
     # On fournit ici un exemple permettant de passer un simple

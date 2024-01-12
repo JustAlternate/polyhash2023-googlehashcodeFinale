@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from polysolver import *
+from polysolvers.polysolver_naive_loic import *
 import sys
 
 
@@ -9,7 +9,7 @@ def Writer(challenge: str, method: str) -> None:
     if method == "naive_loic":
         Solution = naive_approach_loic(challenge)
     if method == "naive_AmeTheo":
-        Solution = naive_approach_loic(challenge)
+        Solution = naive_approach_AmeTheo(challenge)
 
     # basename the challenge name and add .out at the end.
     output_name = "solutions/" + \
