@@ -3,8 +3,7 @@
 from dataclasses import dataclass
 from math import ceil, sqrt
 
-import Objects
-from Objects import Drone, Warehouse
+from Objects import Drone, Warehouse, Map
 from polyparser import parse_challenge
 
 """
@@ -15,7 +14,8 @@ Module de résolution du projet Poly#.
 @dataclass
 class Destination:
     position: tuple[int, int]
-    index_orders: list[int]
+    order_by_type: list[list[int]]
+    sum_qty_type: list[int]
     index_nearby_warehouse: list[int]
 
 
@@ -58,7 +58,7 @@ def naive_approach_autre(challenge):
     """
 
     solution = []
-    game_map = parse_challenge(challenge)
+    game_map: Map = parse_challenge(challenge)
 
     max_distance = ceil(sqrt(game_map.cols ** 2 + game_map.rows ** 2))
 
@@ -78,39 +78,56 @@ def naive_approach_autre(challenge):
         else:
             order_trier_par_destination[order.destination] = [index]
 
-    # Tri des distances entre les warehouses et les destination des orders
+    # Tri des distances entre les warehouses
 
-    for destination, list_order in order_trier_par_destination.items():
+    for assembler_destination, trier_index_order in order_trier_par_destination.items():
         # on tri les warehouse
-        destination_wharehouse_proche = []
+        destination_warehouse_proche = []
         for index_w, warehouse in enumerate(game_map.warehouses):
-            destination_wharehouse_proche.append((calc_dist(warehouse.position, destination), index_w))
-        destination_wharehouse_proche.sort(key=lambda x: x[0])
-        # metre les infos dans un endrois
-        destinations.append(Destination(destination, list_order, [i[1] for i in destination_wharehouse_proche]))
+            destination_warehouse_proche.append((calc_dist(warehouse.position, assembler_destination), index_w))
+        destination_warehouse_proche.sort(key=lambda x: x[0])
+
+        # on rasembles les order par type de produit et on somme les poi
+        order_by_type: list[list[int]] = list()
+        sum_weight = []
+        for i in range(len(game_map.product_weights)):
+            sum = 0
+            order = []
+            for k, v in enumerate(game_map.orders):
+                if k in trier_index_order and v.products_qty[i] != 0:
+                    sum += v.products_qty[i]
+                    order.append(k)
+            order_by_type.append(order)
+            sum_weight.append(sum)
+
+        # on rassemble les destinations des orders
+        destinations.append(
+            Destination(assembler_destination, order_by_type, sum_weight, [i[1] for i in destination_warehouse_proche]))
 
     # faire tourner l'exo
 
+    # pour une meme destination
     for destination in destinations:
 
         print("ues")
 
-        for index_order_current in destination.index_orders:
+        # pour chaque type de produit
+        for product_type, product_qty in enumerate(destination.sum_qty_type):
 
-            order = game_map.orders[index_order_current]
+            # preselection des warehouse avec le produit (on a deja trier par proximity)
+            warehouse_with_the_product = []
+            for index_warehouse in destination.index_nearby_warehouse:
+                warehouse = game_map.warehouses[index_warehouse]
+                if warehouse.stock[product_type] > 0:
+                    product_qty -= warehouse.stock[product_type]
+                    warehouse_with_the_product.append((index_warehouse, warehouse.stock[product_type]))
+                if product_qty <= 0:
+                    break
+            warehouse_with_the_product.sort(key=lambda x: x[1])
 
-            for product_type, product_qty in enumerate(order.products_qty):
-
-                # preselection des warehouse avec le produit (on a deja trier par proximity)
-                warehouse_with_the_product = []
-                for index_warehouse in destination.index_nearby_warehouse:
-                    warehouse = game_map.warehouses[index_warehouse]
-                    if warehouse.stock[product_type] > 0:
-                        product_qty -= warehouse.stock[product_type]
-                        warehouse_with_the_product.append((index_warehouse, warehouse.stock[product_type]))
-                    if product_qty <= 0:
-                        break
-                warehouse_with_the_product.sort(key=lambda x: x[1])
+            # pour chaque order
+            for index_order_current in destination.order_by_type[product_type]:
+                order = game_map.orders[index_order_current]
 
                 while order.products_qty[product_type] > 0:
                     print(order.products_qty[product_type])
