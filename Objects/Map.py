@@ -2,9 +2,15 @@ from Objects import *
 
 
 class Map:
-
-    def __init__(self, rows: int, cols: int, nb_drones: int, nb_turns: int, max_payload: int,
-                 product_weights: list[int]):
+    def __init__(
+        self,
+        rows: int,
+        cols: int,
+        nb_drones: int,
+        nb_turns: int,
+        max_payload: int,
+        product_weights: list[int],
+    ):
         self.rows: int = rows
         self.cols: int = cols
         self.nb_drones: int = nb_drones

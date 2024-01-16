@@ -6,7 +6,7 @@ from Objects import *
 """
 
 
-def parse_challenge(filename: str) -> object:
+def parse_challenge(filename: str) -> Map:
     """Lit un fichier de challenge et extrait les informations nécessaires.
 
     Vous pouvez choisir la structure de données structurées qui va

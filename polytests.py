@@ -1,6 +1,6 @@
 from Objects import *
 from polyparser import *
-from polysolver import naive_approach_loic
+from polysolver_naive_loic import naive_approach_loic
 
 
 def printR(txt): print("\033[91m {}\033[00m" .format(txt))
