@@ -132,15 +132,12 @@ def naive_approach_autre(challenge):
 
                 # tant que pas finit
                 while order.products_qty[product_type] > 0:
-                    print(order.products_qty[product_type])
 
                     warehouse_index = warehouse_with_the_product[0]
 
                     # meilleur distance entre tous les drones et les warehouse
                     drone_index = min(warehouse_drones_distance_avec_chacun[warehouse_index].items(),
                                       key=lambda t: t[1])
-                    print(warehouse_drones_distance_avec_chacun[warehouse_index])
-                    print("drone_index", drone_index)
 
                     drone_index = drone_index[0]
 
@@ -163,7 +160,6 @@ def naive_approach_autre(challenge):
                     game_map.warehouses[warehouse_index].stock[product_type] -= quantity_to_load
 
                     for index, test_warehouse_index in enumerate(warehouse_with_the_product):
-                        print(game_map.warehouses[test_warehouse_index].stock[product_type])
                         if game_map.warehouses[test_warehouse_index].stock[product_type] <= 0:
                             del warehouse_with_the_product[index]
 
@@ -185,9 +181,5 @@ def naive_approach_autre(challenge):
 
                     # On remove 1 objet de order
                     order.products_qty[product_type] -= quantity_to_load
-                    print(game_map.drones[drone_index].position, drone_index)
 
     return solution
-
-
-print(naive_approach_autre("../challenges/a_example.in"))
