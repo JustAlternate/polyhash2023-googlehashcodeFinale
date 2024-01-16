@@ -124,54 +124,68 @@ def naive_approach_autre(challenge):
                 if product_qty <= 0:
                     break
             warehouse_with_the_product.sort(key=lambda x: x[1])
+            warehouse_with_the_product = [i[0] for i in warehouse_with_the_product]
 
             # pour chaque order
             for index_order_current in destination.order_by_type[product_type]:
                 order = game_map.orders[index_order_current]
 
+                # tant que pas finit
                 while order.products_qty[product_type] > 0:
                     print(order.products_qty[product_type])
 
+                    warehouse_index = warehouse_with_the_product[0]
+
                     # meilleur distance entre tous les drones et les warehouse
-                    for warehouse_index, warehouse_stock in warehouse_with_the_product:
-                        if warehouse_stock < 0:
-                            continue
-                        drone_index = min(warehouse_drones_distance_avec_chacun[warehouse_index].items(),
-                                          key=lambda t: t[1])[0]
+                    drone_index = min(warehouse_drones_distance_avec_chacun[warehouse_index].items(),
+                                      key=lambda t: t[1])
+                    print(warehouse_drones_distance_avec_chacun[warehouse_index])
+                    print("drone_index", drone_index)
 
-                        quantity_to_load = min(game_map.max_payload // game_map.product_weights[product_type],
-                                               warehouse_stock, order.products_qty[product_type])
+                    drone_index = drone_index[0]
 
-                        solution.append(
-                            str(drone_index)
-                            + " L "
-                            + str(warehouse_index)
-                            + " "
-                            + str(product_type)
-                            + " "
-                            + str(quantity_to_load)
-                        )
-                        # On remove 1 objet de la warehouse
-                        game_map.warehouses[warehouse_index].stock[product_type] -= quantity_to_load
+                    # le chargement est limité par le payload,
+                    # les stock de la warehouse et le nombre element restant à expedier
+                    quantity_to_load = min(game_map.max_payload // game_map.product_weights[product_type],
+                                           game_map.warehouses[warehouse_index].stock[product_type],
+                                           order.products_qty[product_type])
 
-                        solution.append(
-                            str(drone_index)
-                            + " D "
-                            + str(warehouse_index)
-                            + " "
-                            + str(product_type)
-                            + " "
-                            + str(quantity_to_load)
-                        )
-                        game_map.drones[drone_index].position = order.destination
+                    solution.append(
+                        str(drone_index)
+                        + " L "
+                        + str(warehouse_index)
+                        + " "
+                        + str(product_type)
+                        + " "
+                        + str(quantity_to_load)
+                    )
+                    # On remove 1 objet de la warehouse
+                    game_map.warehouses[warehouse_index].stock[product_type] -= quantity_to_load
 
-                        # on met à jour la matrice
-                        for i, v in enumerate(game_map.warehouses):
-                            warehouse_drones_distance_avec_chacun[i][drone_index] = (
-                                game_map.drones[drone_index].calc_dist(v.position))
+                    for index, test_warehouse_index in enumerate(warehouse_with_the_product):
+                        print(game_map.warehouses[test_warehouse_index].stock[product_type])
+                        if game_map.warehouses[test_warehouse_index].stock[product_type] <= 0:
+                            del warehouse_with_the_product[index]
 
-                        # On remove 1 objet de order
-                        order.products_qty[product_type] -= quantity_to_load
+                    solution.append(
+                        str(drone_index)
+                        + " D "
+                        + str(index_order_current)
+                        + " "
+                        + str(product_type)
+                        + " "
+                        + str(quantity_to_load)
+                    )
+                    game_map.drones[drone_index].position = order.destination
+
+                    # on met à jour la matrice
+                    for i, v in enumerate(game_map.warehouses):
+                        warehouse_drones_distance_avec_chacun[i][drone_index] = (
+                            game_map.drones[drone_index].calc_dist(v.position))
+
+                    # On remove 1 objet de order
+                    order.products_qty[product_type] -= quantity_to_load
+                    print(game_map.drones[drone_index].position, drone_index)
 
     return solution
 
