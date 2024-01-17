@@ -10,7 +10,8 @@ def find_closest_warehouse_with_item_qty(
     for index_warehouse in range(len(warehouses)):
         current_warehouse = warehouses[index_warehouse]
         if current_warehouse.stock[item_type] >= qty:
-            current_dist = Map.drones[drone_index].calc_dist(current_warehouse.position)
+            current_dist = Map.drones[drone_index].calc_dist(
+                current_warehouse.position)
             if current_dist <= best_warehouse[1] or best_warehouse[1] == -1:
                 best_warehouse = (index_warehouse, current_dist)
 
@@ -55,7 +56,7 @@ def max_qty_allowed_to_load(Map, Drone, product_type: int) -> int:
 
 def find_best_order(Map, Drone):
     """
-    Return the best order for a drone to deliver choosed by amount of products that the drone can deliver and then by distance
+    return the index of the best order for a drone to deliver choosed by amount of products that the drone can deliver and then by distance
     """
     orders = []
     # Order by qty then dist
