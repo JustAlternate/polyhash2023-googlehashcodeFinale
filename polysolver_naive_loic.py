@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from polyparser import parse_challenge
-from utils.functs import qty_drone_can_load, find_closest_warehouse_with_item_qty
+from utils.functs import qty_drone_can_load, find_closest_warehouse_with_item_qty, makeCommand
 
 """
 Module de résolution du projet Poly#.
@@ -37,35 +37,17 @@ def naive_approach_loic(challenge):
                 # If no warehouse was found, try to find another one that have less quantity of the desired product
                 while index_warehouse == -1:
                     quantity_able_to_load -= 1
-                index_warehouse = find_closest_warehouse_with_item_qty(
+                current_warehouse = find_closest_warehouse_with_item_qty(
                     Map, current_drone.id, product_type, quantity_able_to_load
                 )
 
-                current_warehouse = Map.warehouses[index_warehouse]
-
-                Solution.append(
-                    str(current_drone.id)
-                    + " L "
-                    + str(index_warehouse)
-                    + " "
-                    + str(product_type)
-                    + " "
-                    + str(quantity_able_to_load)
-                )
+                makeCommand("L", Solution, current_drone.id,
+                            current_warehouse.id, product_type, quantity_able_to_load)
                 # On remove 1 objet de la warehouse
                 current_warehouse.stock[product_type] -= quantity_able_to_load
-
-                Solution.append(
-                    str(current_drone.id)
-                    + " D "
-                    + str(current_order.id)
-                    + " "
-                    + str(product_type)
-                    + " "
-                    + str(quantity_able_to_load)
-                )
+                makeCommand("D", Solution, current_drone.id,
+                            current_order.id, product_type, quantity_able_to_load)
                 current_drone.position = current_order.position
-
                 # On remove 1 objet de l'order
                 current_order.products_qty[product_type] -= quantity_able_to_load
 
