@@ -3,9 +3,8 @@ from math import sqrt, ceil
 
 
 class Drone:
-
     def __init__(self, id, position, stock=[]):
-        self.id: int = id
+        self.id: int = id  # Represents the index of the drone
         self.position: tuple[int, int] = position
         self.stock: list[int] = stock
 
@@ -20,7 +19,3 @@ class Drone:
 
     def wait(self, nb_turns: int):
         pass
-
-    def calc_dist(self, destination: tuple[int, int]):
-        return ceil(sqrt((destination[0] - self.position[0]) ** 2 +
-                         (destination[1] - self.position[1]) ** 2))
