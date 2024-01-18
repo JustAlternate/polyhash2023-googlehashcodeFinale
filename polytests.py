@@ -61,17 +61,17 @@ def test_parse_challenge():
 def test_find_closest_warehouse_with_item_qty():
     m = parse_challenge("challenges/test_utils.in")
     # Using test_utils challenge, closest warehouse for product type 0 and quantity 1 should be warehouse 0
-    assert (find_closest_warehouse_with_item_qty(m, 0, 0, 1) == 0)
+    assert (find_closest_warehouse_with_item_qty(m, 0, 0, 1).id == 0)
     # closest warehouse for product type 2 and quantity 1 should be warehouse 1
-    assert (find_closest_warehouse_with_item_qty(m, 0, 2, 1) == 1)
+    assert (find_closest_warehouse_with_item_qty(m, 0, 2, 1).id == 1)
     # closest warehouse for product type 1 and quantity 1 should be warehouse 0
-    assert (find_closest_warehouse_with_item_qty(m, 0, 1, 1) == 0)
+    assert (find_closest_warehouse_with_item_qty(m, 0, 1, 1).id == 0)
     # closest warehouse for product type 1 and quantity 999 should return -1
     assert (find_closest_warehouse_with_item_qty(m, 0, 1, 999) == -1)
     # closest warehouse for product type 3 and quantity 1 should return -1 cause product type 3 is in no warehouse
     assert (find_closest_warehouse_with_item_qty(m, 0, 3, 1) == -1)
     # closest warehouse for product type 1 and quantity 0 should return -1 cause this is an error
-    assert (find_closest_warehouse_with_item_qty(m, 0, 1, 0) == 0)
+    assert (find_closest_warehouse_with_item_qty(m, 0, 1, 0).id == 0)
 
     printG("Function find_closest_warehouse_with_item_qty tests COMPLETED")
 
