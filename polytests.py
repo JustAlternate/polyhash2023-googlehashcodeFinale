@@ -5,49 +5,55 @@ from polywriter import Writer
 from utils.functs import *
 
 
-def printR(txt): print("\033[91m {}\033[00m" .format(txt))
-def printG(txt): print("\033[92m {}\033[00m" .format(txt))
+def printR(txt):
+    print("\033[91m {}\033[00m".format(txt))
+
+
+def printG(txt):
+    print("\033[92m {}\033[00m".format(txt))
 
 
 def test_Drone():
     D = Drone(0, (0, 0), [1, 1, 1])
-    assert (D.calc_dist((0, 0)) == 0)
+    assert Map.calc_dist(D, D) == 0
 
-    D = Drone(0, (0, 0), [1, 1, 1])
-    assert (D.calc_dist((2, 2)) == 3)
+    D1 = Drone(1, (2, 2), [1, 1, 1])
+    D2 = Drone(0, (0, 0), [1, 1, 1])
+    assert Map.calc_dist(D1, D2) == 3
 
-    D = Drone(0, (0, 0), [1, 1, 1])
-    assert (D.calc_dist((0, 3)) == 3)
+    D1 = Drone(0, (0, 0), [1, 1, 1])
+    D2 = Drone(0, (0, 3), [1, 1, 1])
+    assert Map.calc_dist(D1, D2) == 3
 
     printG("Drone tests COMPLETED")
 
 
 def test_parse_challenge():
     m = parse_challenge("challenges/a_example.in")
-    assert (m.rows == 100)
-    assert (m.cols == 100)
-    assert (m.nb_drones == 3)
-    assert (m.nb_turns == 50)
-    assert (m.max_payload == 500)
-    assert (m.max_payload == 500)
-    assert (m.product_weights == [100, 5, 450])
-    assert (m.warehouses[0].position == (0, 0))
-    assert (m.warehouses[0].stock == [5, 1, 0])
-    assert (m.warehouses[1].position == (5, 5))
-    assert (m.warehouses[1].stock == [0, 10, 2])
-    assert (m.orders[0].destination == (1, 1))
-    assert (m.orders[0].nb_products == 2)
-    assert (m.orders[0].products_qty == [1, 0, 1])
-    assert (m.orders[1].destination == (3, 3))
-    assert (m.orders[1].nb_products == 1)
-    assert (m.orders[1].products_qty == [1, 0, 0])
-    assert (m.orders[1].nb_products == 1)
-    assert (m.orders[2].destination == (5, 6))
-    assert (m.orders[2].nb_products == 1)
-    assert (m.orders[2].products_qty == [0, 0, 1])
-    assert (len(m.drones) == m.nb_drones)
+    assert m.rows == 100
+    assert m.cols == 100
+    assert m.nb_drones == 3
+    assert m.nb_turns == 50
+    assert m.max_payload == 500
+    assert m.max_payload == 500
+    assert m.product_weights == [100, 5, 450]
+    assert m.warehouses[0].position == (0, 0)
+    assert m.warehouses[0].stock == [5, 1, 0]
+    assert m.warehouses[1].position == (5, 5)
+    assert m.warehouses[1].stock == [0, 10, 2]
+    assert m.orders[0].position == (1, 1)
+    assert m.orders[0].nb_products == 2
+    assert m.orders[0].products_qty == [1, 0, 1]
+    assert m.orders[1].position == (3, 3)
+    assert m.orders[1].nb_products == 1
+    assert m.orders[1].products_qty == [1, 0, 0]
+    assert m.orders[1].nb_products == 1
+    assert m.orders[2].position == (5, 6)
+    assert m.orders[2].nb_products == 1
+    assert m.orders[2].products_qty == [0, 0, 1]
+    assert len(m.drones) == m.nb_drones
     for i in range(m.nb_drones):
-        assert (m.drones[i].position == m.warehouses[0].position)
+        assert m.drones[i].position == m.warehouses[0].position
 
     printG("Parser tests COMPLETED")
 
@@ -86,16 +92,18 @@ def test_current_payload_drone():
 def test_naive_loic():
     solution = naive_approach_loic("challenges/a_example.in")
     # Must use set to tests equity between 2 lists.
-    assert (set(solution) == set([
-            '1 L 0 0 1',
-            '1 D 0 0 1',
-            '1 L 1 2 1',
-            '1 D 0 2 1',
-            '2 L 0 0 1',
-            '2 D 1 0 1',
-            '0 L 1 2 1',
-            '0 D 2 2 1'
-            ]))
+    assert set(solution) == set(
+        [
+            "1 L 0 0 1",
+            "1 D 0 0 1",
+            "1 L 1 2 1",
+            "1 D 0 2 1",
+            "2 L 0 0 1",
+            "2 D 1 0 1",
+            "0 L 1 2 1",
+            "0 D 2 2 1",
+        ]
+    )
 
     printG("Solution naive loic tests COMPLETED")
 

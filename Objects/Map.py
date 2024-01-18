@@ -1,4 +1,5 @@
-from Objects import *
+from Objects import Drone, Warehouse, Order
+from math import ceil, sqrt
 
 
 class Map:
@@ -20,3 +21,12 @@ class Map:
         self.warehouses: list[Warehouse] = []
         self.drones: list[Drone] = []
         self.orders: list[Order] = []
+
+    @staticmethod
+    def calc_dist(object1, object2) -> int:
+        return ceil(
+            sqrt(
+                (object2.position[0] - object1.position[0]) ** 2
+                + (object2.position[1] - object1.position[1]) ** 2
+            )
+        )

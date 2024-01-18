@@ -10,8 +10,7 @@ def find_closest_warehouse_with_item_qty(
     for index_warehouse in range(len(warehouses)):
         current_warehouse = warehouses[index_warehouse]
         if current_warehouse.stock[item_type] >= qty:
-            current_dist = Map.drones[drone_index].calc_dist(
-                current_warehouse.position)
+            current_dist = Map.calc_dist(Map.drones[drone_index], current_warehouse)
             if current_dist <= best_warehouse[1] or best_warehouse[1] == -1:
                 best_warehouse = (index_warehouse, current_dist)
 
@@ -54,14 +53,14 @@ def max_qty_allowed_to_load(Map, Drone, product_type: int) -> int:
     return allowed_payload // product_weight
 
 
-def find_best_order(Map, Drone):
+def find_best_order(Map, Drone):  ## Might use this later
     """
     return the index of the best order for a drone to deliver choosed by amount of products that the drone can deliver and then by distance
     """
     orders = []
     # Order by qty then dist
     for index_order, order in enumerate(Map.orders):
-        dist = Drone.calc_dist(order.destination)
+        dist = Map.calc_dist(order, Drone)  ##
         nb_prod_can_deliver = 0
 
         for prod_type, qty in enumerate(order.products_qty):
@@ -71,3 +70,18 @@ def find_best_order(Map, Drone):
 
     best = sorted(orders, key=lambda x: (-x[1], x[2]))[0]
     return best[0]
+
+
+def find_nearest_orders(Map, Order, available_orders, ideal_cluster_size):
+    nearest_orders = []
+
+    for available_order in available_orders:
+        calc_dist = Map.calc_dist(Order, available_order)
+        nearest_orders.append((calc_dist, available_order))
+
+    nearest_orders = sorted(nearest_orders, key=lambda x: x[0])
+    nearest_orders = [order[1] for order in nearest_orders]
+
+    nearest_orders = nearest_orders[0 : ideal_cluster_size - 1]
+
+    return nearest_orders
