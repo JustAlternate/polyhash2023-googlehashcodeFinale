@@ -1,13 +1,23 @@
 from polyparser import parse_challenge
 from utils.functs import (
     find_nearest_orders,
-    find_closest_warehouse_with_item_qty,
+    find_closest_warehouse,
     qty_drone_can_load,
-    makeCommand
+    makeCommand,
+    find_closest_cluster,
+    find_closest_cluster_for_warehouse,
 )
 
 
-def naive_approach_theo(challenge):
+def naive_approach_theo(challenge):  # Closest clusters approach
+    """
+    The idea is to create clusters of closest orders and then to complete each cluster
+
+    For each cluster we complete each order one by one by looking at the nearest warehouse with the needed quantity
+
+    When we have completed a cluster we choose the nearest cluster
+    and we repeat the process until there is no more clusters
+    """
     Solution = []
     Map = parse_challenge(challenge)
 
@@ -46,7 +56,11 @@ def naive_approach_theo(challenge):
 
     current_drone_index = 0
     # Completing orders for each cluster
-    for cluster in clusters.values():
+    cluster_id = find_closest_cluster_for_warehouse(Map, Map.warehouses[0], clusters)
+    while len(clusters) != 0:
+        cluster = clusters[cluster_id]
+
+        tmp_cluster = cluster.copy()
         for order in cluster:  # Should i create a cluster class ?
             current_drone_index = (current_drone_index + 1) % (len(Map.drones))
             current_drone = Map.drones[current_drone_index]
@@ -57,27 +71,36 @@ def naive_approach_theo(challenge):
                     )
 
                     # Try to find a warehouse with the needed quantity, if there is not, try to find one with less quantity
-                    current_warehouse = find_closest_warehouse_with_item_qty(
+                    current_warehouse, qty_able_to_load = find_closest_warehouse(
                         Map, current_drone.id, product_type, quantity_able_to_load
                     )
 
-                    # If no warehouse was found, try to find another one that have less quantity of the desired product
-                    while current_warehouse == -1:
-                        quantity_able_to_load -= 1
-                        current_warehouse = find_closest_warehouse_with_item_qty(
-                            Map, current_drone.id, product_type, quantity_able_to_load
-                        )
-
-                    makeCommand("L", current_drone.id, current_warehouse.id,
-                                product_type, quantity_able_to_load)
+                    makeCommand(
+                        "L",
+                        Solution,
+                        current_drone.id,
+                        current_warehouse.id,
+                        product_type,
+                        quantity_able_to_load,
+                    )
                     # On remove 1 objet de la warehouse
                     current_warehouse.stock[product_type] -= quantity_able_to_load
 
-                    makeCommand("D", current_drone.id, current_order.id,
-                                product_type, quantity_able_to_load)
+                    makeCommand(
+                        "D",
+                        Solution,
+                        current_drone.id,
+                        order.id,
+                        product_type,
+                        quantity_able_to_load,
+                    )
                     current_drone.position = order.position
 
                     # On remove 1 objet de l'order
                     order.products_qty[product_type] -= quantity_able_to_load
+
+        del clusters[cluster_id]
+        if len(clusters) - 1 >= 0:
+            cluster_id = find_closest_cluster(Map, tmp_cluster, clusters)
 
     return Solution

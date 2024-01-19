@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from polyparser import parse_challenge
-from utils.functs import qty_drone_can_load, find_closest_warehouse_with_item_qty, makeCommand
+from utils.functs import qty_drone_can_load, find_closest_warehouse, makeCommand
 
 """
 Module de résolution du projet Poly#.
@@ -30,14 +30,7 @@ def naive_approach_loic(challenge):
                 )
 
                 # Try to find a warehouse with the needed quantity, if there is not, try to find one with less quantity
-                index_warehouse = find_closest_warehouse_with_item_qty(
-                    Map, current_drone.id, product_type, quantity_able_to_load
-                )
-
-                # If no warehouse was found, try to find another one that have less quantity of the desired product
-                while index_warehouse == -1:
-                    quantity_able_to_load -= 1
-                current_warehouse = find_closest_warehouse_with_item_qty(
+                current_warehouse, qty_able_to_load = find_closest_warehouse(
                     Map, current_drone.id, product_type, quantity_able_to_load
                 )
 
