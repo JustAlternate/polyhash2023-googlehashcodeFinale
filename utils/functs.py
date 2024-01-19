@@ -1,24 +1,57 @@
-def find_closest_warehouse_with_item_qty(
+from Objects import Warehouse, Map, Order
+from typing import Tuple, List
+
+
+def find_closest_warehouse(
     Map, drone_index: int, item_type: int, qty: int
-) -> int:
+) -> Tuple[Warehouse]:
     """
-    Return the index of the warehouse with the desired item_type and qty.
-    If no warehouse matching criteria, Return -1
+    Return the closest warehouse with the maximum qty possible to get in one load on the map.
     """
     best_warehouse = (-1, -1)
     warehouses = Map.warehouses
-    for current_warehouse in warehouses:
-        if current_warehouse.stock[item_type] >= qty:
-            current_dist = Map.calc_dist(
-                Map.drones[drone_index], current_warehouse
-            )
-            if current_dist <= best_warehouse[1] or best_warehouse[1] == -1:
-                best_warehouse = (current_warehouse, current_dist)
+    while best_warehouse[0] == -1 and qty > 0:
+        for current_warehouse in warehouses:
+            if current_warehouse.stock[item_type] >= qty:
+                current_dist = Map.calc_dist(Map.drones[drone_index], current_warehouse)
+                if current_dist <= best_warehouse[1] or best_warehouse[1] == -1:
+                    best_warehouse = (current_warehouse, current_dist)
 
-    return best_warehouse[0]
+        qty -= 1
+
+    if qty < 0:
+        raise Exception("No warehouse with enough stock")
+
+    return best_warehouse[0], qty
 
 
-def qty_drone_can_load(Map, product_type: int, order_index: int):
+def find_closest_cluster(Map, current_cluster, available_clusters):
+    """
+    Return the closest cluster
+    """
+    best_cluster = (-1, -1)
+    for id_cluster, orders in available_clusters.items():
+        current_dist = Map.calc_dist(current_cluster[0], orders[0])
+        if current_dist <= best_cluster[1] or best_cluster[1] == -1:
+            best_cluster = (id_cluster, current_dist)
+
+    return best_cluster[0]
+
+
+def find_closest_cluster_for_warehouse(Map, Warehouse, available_clusters):
+    """
+    Return the closest cluster for a warehouse.
+    """
+    best_cluster = (-1, -1)
+    for id_cluster, orders in available_clusters.items():
+        current_dist = Map.calc_dist(Warehouse, orders[0])
+        if current_dist <= best_cluster[1] or best_cluster[1] == -1:
+            best_cluster = (id_cluster, current_dist)
+
+    return best_cluster[0]
+
+
+def qty_drone_can_load(Map: Map, product_type: int, order_index: int):
     """
     Return the max amount of product a drone can take for a specific product_type assuming that the drone is empty
     """
@@ -73,7 +106,14 @@ def find_best_order(Map, Drone):  # Might use this later
     return best[0]
 
 
-def makeCommand(action: str, Solution: list, drone_id: int, dest_id: int, product_type: int, qty: int) -> None:
+def makeCommand(
+    action: str,
+    Solution: list,
+    drone_id: int,
+    dest_id: int,
+    product_type: int,
+    qty: int,
+) -> None:
     """
     Take an action either "L" or "D" and write a string to append into the list Solution
     exemple : makeCommand("L", [], 0, 1, 0, 2)
@@ -81,8 +121,15 @@ def makeCommand(action: str, Solution: list, drone_id: int, dest_id: int, produc
     return nothing
     """
     Solution.append(
-        str(drone_id)+" "+str(action)+" "+str(dest_id) +
-        " "+str(product_type)+" "+str(qty)
+        str(drone_id)
+        + " "
+        + str(action)
+        + " "
+        + str(dest_id)
+        + " "
+        + str(product_type)
+        + " "
+        + str(qty)
     )
 
 
@@ -96,6 +143,6 @@ def find_nearest_orders(Map, Order, available_orders, ideal_cluster_size):
     nearest_orders = sorted(nearest_orders, key=lambda x: x[0])
     nearest_orders = [order[1] for order in nearest_orders]
 
-    nearest_orders = nearest_orders[0: ideal_cluster_size - 1]
+    nearest_orders = nearest_orders[0 : ideal_cluster_size - 1]
 
     return nearest_orders
