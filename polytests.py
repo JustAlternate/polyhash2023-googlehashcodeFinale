@@ -66,6 +66,8 @@ def test_find_closest_warehouse():
     assert find_closest_warehouse(m, 0, 2, 1)[0].id == 1
     # closest warehouse for product type 1 and quantity 1 should be warehouse 0
     assert find_closest_warehouse(m, 0, 1, 1)[0].id == 0
+    # closest warehouse for product type 0 and quantity 1 should be warehouse 0
+    assert find_closest_warehouse(m, 0, 0, 5)[0].id == 0
     printG("Function find_closest_warehouse tests COMPLETED")
 
 
@@ -87,9 +89,9 @@ def test_naive_loic():
     # Must use set to tests equity between 2 lists.
     assert set(solution) == set(
         [
-            "1 L 0 0 1",
-            "1 D 0 0 1",
+            "0 L 0 0 1",
             "1 L 1 2 1",
+            "0 D 0 0 1",
             "1 D 0 2 1",
             "2 L 0 0 1",
             "2 D 1 0 1",
@@ -119,7 +121,7 @@ def test_writer():
 if __name__ == "__main__":
     test_Drone()
     test_parse_challenge()
-    test_naive_loic()
-    test_writer()
     test_find_closest_warehouse()
     test_current_payload_drone()
+    test_naive_loic()
+    test_writer()

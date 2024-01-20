@@ -4,24 +4,29 @@ from typing import Tuple, List
 
 def find_closest_warehouse(
     Map, drone_index: int, item_type: int, qty: int
-) -> Tuple[Warehouse]:
+) -> Tuple[Warehouse, int]:
     """
     Return the closest warehouse with the maximum qty possible to get in one load on the map.
     """
-    best_warehouse = (-1, -1)
+    best_warehouse = (-1, float('inf'))
     warehouses = Map.warehouses
-    while best_warehouse[0] == -1 and qty > 0:
-        for current_warehouse in warehouses:
-            if current_warehouse.stock[item_type] >= qty:
-                current_dist = Map.calc_dist(Map.drones[drone_index], current_warehouse)
-                if current_dist <= best_warehouse[1] or best_warehouse[1] == -1:
-                    best_warehouse = (current_warehouse, current_dist)
 
+    while best_warehouse[0] == -1:
+        for curr_warehouse in warehouses:
+            if curr_warehouse.stock[item_type] >= qty:
+                dist = Map.calc_dist(Map.drones[drone_index], curr_warehouse)
+                if dist < best_warehouse[1]:
+                    best_warehouse = (curr_warehouse, dist)
+
+        if best_warehouse[0] != -1:
+            return best_warehouse[0], qty
+        # No warehouse found, so we try finding one with less qty desired.
         qty -= 1
 
-    if qty < 0:
-        raise Exception("No warehouse with enough stock")
+        if qty == 0:
+            raise Exception("No warehouse with enough stock")
 
+    print(best_warehouse, qty)
     return best_warehouse[0], qty
 
 
@@ -53,7 +58,7 @@ def find_closest_cluster_for_warehouse(Map, Warehouse, available_clusters):
 
 def qty_drone_can_load(Map: Map, product_type: int, order_index: int):
     """
-    Return the max amount of product a drone can take for a specific product_type assuming that the drone is empty
+    Return the max amount of product a drone can take for a specific order product_type assuming that the drone is empty
     """
     current_order = Map.orders[order_index]
     qty_wanted = current_order.products_qty[product_type]
@@ -133,16 +138,36 @@ def makeCommand(
     )
 
 
-def find_nearest_orders(Map, Order, available_orders, ideal_cluster_size):
-    nearest_orders = []
+def makeCommands(Solution, queue_load, queue_deliver):
+    # Every drone have an action to do now, so we write all load actions first then we write all their deliver actions
+    #
+    for load_action in queue_load:
+        makeCommand("L", Solution,
+                    load_action[0], load_action[1], load_action[2], load_action[3])
 
-    for available_order in available_orders:
-        calc_dist = Map.calc_dist(Order, available_order)
-        nearest_orders.append((calc_dist, available_order))
+    for deliver_action in queue_deliver:
+        makeCommand("D", Solution,
+                    deliver_action[0], deliver_action[1], deliver_action[2], deliver_action[3])
+    # Empty queues
+    queue_load = []
+    queue_deliver = []
 
-    nearest_orders = sorted(nearest_orders, key=lambda x: x[0])
-    nearest_orders = [order[1] for order in nearest_orders]
 
-    nearest_orders = nearest_orders[0 : ideal_cluster_size - 1]
+def sort_objects_by_distance_from_obj(Map, obj, objects_list_to_sort, ideal_cluster_size=1):
+    """
+    Take a Map, an object and a list of other objects.
+    Sort the list by closest to obj position.
+    """
+    sorted_list = []
 
-    return nearest_orders
+    for current_obj in objects_list_to_sort:
+        calc_dist = Map.calc_dist(obj, current_obj)
+        sorted_list.append((calc_dist, current_obj))
+
+    sorted_list = sorted(sorted_list, key=lambda x: x[0])
+    sorted_list = [curr_obj[1] for curr_obj in sorted_list]
+
+    if ideal_cluster_size > 1:
+        sorted_list = sorted_list[0: ideal_cluster_size - 1]
+
+    return sorted_list

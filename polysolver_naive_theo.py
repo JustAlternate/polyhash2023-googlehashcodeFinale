@@ -1,6 +1,6 @@
 from polyparser import parse_challenge
 from utils.functs import (
-    find_nearest_orders,
+    sort_objects_by_distance_from_obj,
     find_closest_warehouse,
     qty_drone_can_load,
     makeCommand,
@@ -48,7 +48,7 @@ def naive_approach_theo(challenge):  # Closest clusters approach
                     clustered_orders.add(remaining_order)
 
             else:  # We make clusters with ideal size using the nearest orders
-                nearest_orders = find_nearest_orders(
+                nearest_orders = sort_objects_by_distance_from_obj(
                     Map, current_order, available_orders, ideal_cluster_size
                 )
                 clusters[num_cluster].extend(nearest_orders)
@@ -56,7 +56,8 @@ def naive_approach_theo(challenge):  # Closest clusters approach
 
     current_drone_index = 0
     # Completing orders for each cluster
-    cluster_id = find_closest_cluster_for_warehouse(Map, Map.warehouses[0], clusters)
+    cluster_id = find_closest_cluster_for_warehouse(
+        Map, Map.warehouses[0], clusters)
     while len(clusters) != 0:
         cluster = clusters[cluster_id]
 
@@ -81,10 +82,10 @@ def naive_approach_theo(challenge):  # Closest clusters approach
                         current_drone.id,
                         current_warehouse.id,
                         product_type,
-                        quantity_able_to_load,
+                        qty_able_to_load,
                     )
                     # On remove 1 objet de la warehouse
-                    current_warehouse.stock[product_type] -= quantity_able_to_load
+                    current_warehouse.stock[product_type] -= qty_able_to_load
 
                     makeCommand(
                         "D",
@@ -92,12 +93,12 @@ def naive_approach_theo(challenge):  # Closest clusters approach
                         current_drone.id,
                         order.id,
                         product_type,
-                        quantity_able_to_load,
+                        qty_able_to_load,
                     )
                     current_drone.position = order.position
 
                     # On remove 1 objet de l'order
-                    order.products_qty[product_type] -= quantity_able_to_load
+                    order.products_qty[product_type] -= qty_able_to_load
 
         del clusters[cluster_id]
         if len(clusters) - 1 >= 0:

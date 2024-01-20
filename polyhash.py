@@ -6,7 +6,7 @@ import os
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("usage: python polyhash.py naive_loic|naive_AmeTheo")
+        print("usage: python polyhash.py naive_loic|naive_theo")
     else:
         print("Generating solutions using "+str(sys.argv[1]))
 
