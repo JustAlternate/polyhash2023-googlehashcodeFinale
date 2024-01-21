@@ -1,0 +1,2 @@
+from polysolvers.polysolver_naive_loic import naive_approach_loic
+from polysolvers.polysolver_naive_theo import naive_approach_theo

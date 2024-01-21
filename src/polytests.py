@@ -1,31 +1,34 @@
-from Objects import *
-from polyparser import *
-from polysolver_naive_loic import naive_approach_loic
+from Objects import Map, Drone
+from polyparser import parse_challenge
 from polywriter import Writer
-from utils.functs import *
+from polysolvers import naive_approach_loic
+from utils.functs import (
+    current_payload_drone,
+    find_closest_warehouse,
+)
 
 
-def printR(txt):
+def printr(txt):
     print("\033[91m {}\033[00m".format(txt))
 
 
-def printG(txt):
+def printg(txt):
     print("\033[92m {}\033[00m".format(txt))
 
 
-def test_Drone():
-    D = Drone(0, (0, 0), [1, 1, 1])
-    assert Map.calc_dist(D, D) == 0
+def test_drone():
+    d0 = Drone(0, (0, 0), [1, 1, 1])
+    assert Map.calc_dist(d0, d0) == 0
 
-    D1 = Drone(1, (2, 2), [1, 1, 1])
-    D2 = Drone(0, (0, 0), [1, 1, 1])
-    assert Map.calc_dist(D1, D2) == 3
+    d1 = Drone(1, (2, 2), [1, 1, 1])
+    d2 = Drone(0, (0, 0), [1, 1, 1])
+    assert Map.calc_dist(d1, d2) == 3
 
-    D1 = Drone(0, (0, 0), [1, 1, 1])
-    D2 = Drone(0, (0, 3), [1, 1, 1])
-    assert Map.calc_dist(D1, D2) == 3
+    d1 = Drone(0, (0, 0), [1, 1, 1])
+    d2 = Drone(0, (0, 3), [1, 1, 1])
+    assert Map.calc_dist(d1, d2) == 3
 
-    printG("Drone tests COMPLETED")
+    printg("Drone class tests COMPLETED")
 
 
 def test_parse_challenge():
@@ -55,12 +58,13 @@ def test_parse_challenge():
     for i in range(m.nb_drones):
         assert m.drones[i].position == m.warehouses[0].position
 
-    printG("Parser tests COMPLETED")
+    printg("Parser tests COMPLETED")
 
 
 def test_find_closest_warehouse():
     m = parse_challenge("challenges/test_utils.in")
-    # Using test_utils challenge, closest warehouse for product type 0 and quantity 1 should be warehouse 0
+    # Using test_utils challenge, closest warehouse for product type 0 and
+    # quantity 1 should be warehouse 0
     assert find_closest_warehouse(m, 0, 0, 1)[0].id == 0
     # closest warehouse for product type 2 and quantity 1 should be warehouse 1
     assert find_closest_warehouse(m, 0, 2, 1)[0].id == 1
@@ -68,20 +72,20 @@ def test_find_closest_warehouse():
     assert find_closest_warehouse(m, 0, 1, 1)[0].id == 0
     # closest warehouse for product type 0 and quantity 1 should be warehouse 0
     assert find_closest_warehouse(m, 0, 0, 5)[0].id == 0
-    printG("Function find_closest_warehouse tests COMPLETED")
+    printg("find_closest_warehouse tests COMPLETED")
 
 
 def test_current_payload_drone():
     m = parse_challenge("challenges/test_utils.in")
-    Drone = m.drones[0]
-    Drone.stock = [1, 0, 0]
-    assert current_payload_drone(m, Drone) == m.product_weights[0] * 1
-    Drone.stock = [0, 2, 0]
-    assert current_payload_drone(m, Drone) == m.product_weights[1] * 2
-    Drone.stock = [0, 0, 0]
-    assert current_payload_drone(m, Drone) == 0
+    drone = m.drones[0]
+    drone.stock = [1, 0, 0]
+    assert current_payload_drone(m, drone) == m.product_weights[0] * 1
+    drone.stock = [0, 2, 0]
+    assert current_payload_drone(m, drone) == m.product_weights[1] * 2
+    drone.stock = [0, 0, 0]
+    assert current_payload_drone(m, drone) == 0
 
-    printG("Function current_payload_drone tests COMPLETED")
+    printg("current_payload_drone tests COMPLETED")
 
 
 def test_naive_loic():
@@ -100,11 +104,12 @@ def test_naive_loic():
         ]
     )
 
-    printG("Solution naive loic tests COMPLETED")
+    printg("Solution naive loic tests COMPLETED")
 
 
 def test_writer():
-    # Testing if writer hasnt changed, if it have, you may want to update the solutions stored in solutions_test to pass this test
+    # Testing if writer hasnt changed, if it have, you may want to update the
+    # solutions stored in solutions_test to pass this test
     Writer("challenges/a_example.in", "naive_loic")
     assert set(open("solutions/a_example.out")) == set(
         open("solutions_test/a_example.test")
@@ -115,11 +120,11 @@ def test_writer():
         open("solutions_test/b_busy_day.test")
     )
 
-    printG("Writer tests COMPLETED")
+    printg("Writer tests COMPLETED")
 
 
 if __name__ == "__main__":
-    test_Drone()
+    test_drone()
     test_parse_challenge()
     test_find_closest_warehouse()
     test_current_payload_drone()
