@@ -1,12 +1,16 @@
-from Objects import Warehouse, Map, Order
-from typing import Tuple, List
+from Objects import Warehouse, Map
+from typing import Tuple
 
 
 def find_closest_warehouse(
-    Map, drone_index: int, item_type: int, qty: int
+    Map,
+    drone_index: int,
+    item_type: int,
+    qty: int
 ) -> Tuple[Warehouse, int]:
     """
-    Return the closest warehouse with the maximum qty possible to get in one load on the map.
+    Return the closest warehouse with the maximum
+    qty possible to get in one load on the map.
     """
     best_warehouse = (-1, float('inf'))
     warehouses = Map.warehouses
@@ -58,7 +62,8 @@ def find_closest_cluster_for_warehouse(Map, Warehouse, available_clusters):
 
 def qty_drone_can_load(Map: Map, product_type: int, order_index: int):
     """
-    Return the max amount of product a drone can take for a specific order product_type assuming that the drone is empty
+    Return the max amount of product a drone can take for a specific
+    order product_type assuming that the drone is empty
     """
     current_order = Map.orders[order_index]
     qty_wanted = current_order.products_qty[product_type]
@@ -82,7 +87,8 @@ def current_payload_drone(Map, Drone) -> int:
 
 def max_qty_allowed_to_load(Map, Drone, product_type: int) -> int:
     """
-    Return max qty that a drone can take for a specifc product and checking the current drone payload
+    Return max qty that a drone can take for a
+    specifc product and checking the current drone payload
     """
     product_weight = Map.product_weights[product_type]
     current_payload = current_payload_drone(Map, Drone)
@@ -94,7 +100,9 @@ def max_qty_allowed_to_load(Map, Drone, product_type: int) -> int:
 
 def find_best_order(Map, Drone):  # Might use this later
     """
-    return the index of the best order for a drone to deliver choosed by amount of products that the drone can deliver and then by distance
+    return the index of the best order for a drone
+    to deliver choosed by amount of products that
+    the drone can deliver and then by distance
     """
     orders = []
     # Order by qty then dist
@@ -120,10 +128,8 @@ def makeCommand(
     qty: int,
 ) -> None:
     """
-    Take an action either "L" or "D" and write a string to append into the list Solution
-    exemple : makeCommand("L", [], 0, 1, 0, 2)
-    Solution -> ["0 L 1 2 2"]
-    return nothing
+    Take an action either "L" or "D" and write a
+    string to append into the list Solution
     """
     Solution.append(
         str(drone_id)
@@ -138,22 +144,36 @@ def makeCommand(
     )
 
 
-def makeCommands(Solution, queue_load, queue_deliver):
-    # Every drone have an action to do now, so we write all load actions first then we write all their deliver actions
-    #
+def makeCommands(solution, queue_load, queue_deliver):
+    # Every drone have an action to do now,
+    # so we write all load actions first then
+    # we write all their deliver actions
     for load_action in queue_load:
-        makeCommand("L", Solution,
-                    load_action[0], load_action[1], load_action[2], load_action[3])
+        makeCommand(
+            "L",
+            solution,
+            load_action[0],
+            load_action[1],
+            load_action[2],
+            load_action[3]
+        )
 
     for deliver_action in queue_deliver:
-        makeCommand("D", Solution,
-                    deliver_action[0], deliver_action[1], deliver_action[2], deliver_action[3])
-    # Empty queues
-    queue_load = []
-    queue_deliver = []
+        makeCommand(
+            "D",
+            solution,
+            deliver_action[0],
+            deliver_action[1],
+            deliver_action[2],
+            deliver_action[3],
+        )
 
 
-def sort_objects_by_distance_from_obj(Map, obj, objects_list_to_sort, ideal_cluster_size=1):
+def sort_objects_by_distance_from_obj(
+        Map,
+        obj,
+        objects_list_to_sort,
+        ideal_cluster_size=1):
     """
     Take a Map, an object and a list of other objects.
     Sort the list by closest to obj position.
