@@ -37,5 +37,5 @@ clean:
 	@echo "Cleaning  non-mandatory files..."
 	rm -rf __pycache__
 	rm -rf venv
-	rm __init__.py
-	@echo "Success"
+	rm -f solutions/*
+	echo "Success"
