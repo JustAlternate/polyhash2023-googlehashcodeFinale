@@ -10,8 +10,11 @@ def Writer(challenge: str, method: str) -> None:
         Solution = naive_approach_loic(challenge)
     elif method == "naive_theo":
         raise "not implemented"
-    elif method == "naive amedeo":
+    elif method == "naive_amedeo":
         Solution = naive_approach_amedeo(challenge)
+    else:
+        print("La solution n'existe pas")
+        return
 
     # basename the challenge name and add .out at the end.
     output_name = (
