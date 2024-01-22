@@ -1,7 +1,7 @@
 from Objects import Map, Drone
 from polyparser import parse_challenge
 from polywriter import Writer
-from polysolvers import naive_approach_loic
+from polysolvers import naive_approach_loic, naive_approach_theo
 from utils.functs import (
     current_payload_drone,
     find_closest_warehouse,
@@ -107,18 +107,50 @@ def test_naive_loic():
     printg("Solution naive loic tests COMPLETED")
 
 
+def test_naive_theo():
+    solution = naive_approach_theo("challenges/a_example.in")
+    # Must use set to tests equity between 2 lists.
+    assert set(solution) == set(
+        [
+            "1 L 0 0 1",
+            "1 D 0 0 1",
+            "1 L 1 2 1",
+            "1 D 0 2 1",
+            "2 L 0 0 1",
+            "2 D 1 0 1",
+            "0 L 1 2 1",
+            "0 D 2 2 1"
+        ]
+    )
+
+    printg("Solution naive theo tests COMPLETED")
+
+
 def test_writer():
     # Testing if writer hasnt changed, if it have, you may want to update the
     # solutions stored in solutions_test to pass this test
     Writer("challenges/a_example.in", "naive_loic")
     assert set(open("solutions/a_example.out")) == set(
-        open("solutions_test/a_example.test")
+        open("solutions_test/a_example_loic.test")
     )
 
     Writer("challenges/b_busy_day.in", "naive_loic")
     assert set(open("solutions/b_busy_day.out")) == set(
-        open("solutions_test/b_busy_day.test")
+        open("solutions_test/b_busy_day_loic.test")
     )
+    printg("Writer tests PASSED for naive_loic")
+
+    Writer("challenges/a_example.in", "naive_theo")
+    assert set(open("solutions/a_example.out")) == set(
+        open("solutions_test/a_example_theo.test")
+    )
+
+    Writer("challenges/b_busy_day.in", "naive_theo")
+    assert set(open("solutions/b_busy_day.out")) == set(
+        open("solutions_test/b_busy_day_theo.test")
+    )
+
+    printg("Writer tests PASSED for naive_theo")
 
     printg("Writer tests COMPLETED")
 
@@ -129,4 +161,5 @@ if __name__ == "__main__":
     test_find_closest_warehouse()
     test_current_payload_drone()
     test_naive_loic()
+    test_naive_theo()
     test_writer()
