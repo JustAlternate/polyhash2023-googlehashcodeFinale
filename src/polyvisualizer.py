@@ -34,7 +34,7 @@ def map_visualizer_init(challenge):
         grid[dest[0]][dest[1]] = (printr(warehouse_index), warehouse_index)
 
     for order_index in range(len(challenge.orders)):
-        dest = challenge.orders[order_index].destination
+        dest = challenge.orders[order_index].position
         grid[dest[0]][dest[1]] = (printg(order_index), order_index)
 
     for row in grid:
@@ -42,7 +42,7 @@ def map_visualizer_init(challenge):
         print("|", end="")
         for item in row:
             print(item[0] + (str(" ")
-                  * (number_needed - len(str(item[1])))), end="")
+                             * (number_needed - len(str(item[1])))), end="")
 
             print("|", end="")
     print("\n")

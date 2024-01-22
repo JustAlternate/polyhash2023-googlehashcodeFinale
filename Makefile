@@ -19,6 +19,12 @@ generate_naive_theo: venv/bin/activate
 	python3 src/polyhash.py naive_theo
 	@echo "Solutions generated successfully using naive_theo"
 
+generate_naive_amedeo: venv/bin/activate
+	@echo "Generating every solutions using naive_amedeo..."
+	@source venv/bin/activate
+	python3 src/polyhash.py naive_amedeo
+	@echo "Solutions generated successfully using naive_amedeo"
+
 lint: venv/bin/activate
 	@echo "Looking for linting and formating errors using flake8 and pep8 rules..."
 	@source venv/bin/activate
