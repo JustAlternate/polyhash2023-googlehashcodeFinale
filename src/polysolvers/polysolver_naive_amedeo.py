@@ -32,39 +32,12 @@ class Destination:
         return self
 
 
-def quantity_drone_can_take(Map, product_type, current_order):
-    """
-    Return the max amount of product a drone can take for a specific product_type
-    """
-    qty_wanted = current_order.products_qty[product_type]
-    product_type_weight = Map.product_weights[product_type]
-    drone_max_payload = Map.max_payload
-
-    return min(drone_max_payload // product_type_weight, qty_wanted)
-
-
-def find_closest_warehouse(warehouses: list[Warehouse], drone: Drone, item_type: int) -> int:
-    """
-    Return the index of the warehouse with the desired item_type and qty.
-    If no warehouse matching criteria, Return -1
-    """
-    best_warehouse = (-1, -1)
-    for warehouse in warehouses:
-        if warehouse.stock[item_type] >= qty:
-            current_dist = drone.calc_dist(
-                warehouse.position)
-            if current_dist <= best_warehouse[1] or best_warehouse[1] == -1:
-                best_warehouse = (warehouse, current_dist)
-
-    return best_warehouse[0]
-
-
 def calc_dist(origine: tuple[int, int], destination: tuple[int, int]):
     return ceil(sqrt((destination[0] - origine[0]) ** 2 +
                      (destination[1] - origine[1]) ** 2))
 
 
-def naive_approach_autre(challenge):
+def polysolver_naive_amedeo(challenge):
     """
     Naive approch that use every drones one by one and cycle through each orders
     one by one and each product_type one by one.
