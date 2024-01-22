@@ -1,6 +1,6 @@
 from Objects import Map, Drone
 from polyparser import parse_challenge
-from polywriter import Writer
+from src.polywriter import Writer
 from polysolvers import naive_approach_loic, naive_approach_theo
 from utils.functs import (
     current_payload_drone,
