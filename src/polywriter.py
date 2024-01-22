@@ -22,8 +22,6 @@ def Writer(challenge: str, method: str) -> None:
         for line in solution:
             f.write(line + "\n")
 
-    print("Done Writing to : " + str(output_name))
-
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
