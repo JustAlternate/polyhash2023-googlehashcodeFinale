@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from src.polysolvers import naive_approach_loic, naive_approach_theo
+from polysolvers import naive_approach_loic, naive_approach_theo, polysolver_naive_amedeo
 import sys
 
 
@@ -8,7 +8,7 @@ def Writer(challenge: str, method: str) -> None:
     if method == "naive_loic":
         Solution = naive_approach_loic(challenge)
     elif method == "naive_theo":
-        raise "not implemented"
+        Solution = naive_approach_theo(challenge)
     elif method == "naive_amedeo":
         Solution = naive_approach_amedeo(challenge)
     else:
