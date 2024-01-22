@@ -26,9 +26,9 @@ def naive_approach_theo(challenge):  # Closest clusters approach
     # Need to be edited later to test different cluster sizes
     ideal_cluster_size = 5
 
-    orders = set(challenge.orders)
+    orders = challenge.orders
 
-    clustered_orders = set()
+    clustered_orders = []
 
     clusters = {}
 
@@ -38,9 +38,10 @@ def naive_approach_theo(challenge):  # Closest clusters approach
             num_cluster = len(clusters)
 
             clusters[num_cluster] = [current_order]
-            clustered_orders.add(current_order)
+            clustered_orders.append(current_order)
 
-            available_orders = orders - clustered_orders
+            available_orders = [
+                order for order in orders if order not in clustered_orders]
 
             if (len(available_orders) < ideal_cluster_size):
                 # Case when we don't have enough orders
@@ -48,7 +49,7 @@ def naive_approach_theo(challenge):  # Closest clusters approach
                 # orders to the current cluster without restrictions
                 for remaining_order in available_orders:
                     clusters[num_cluster].append(remaining_order)
-                    clustered_orders.add(remaining_order)
+                    clustered_orders.append(remaining_order)
 
             else:  # We make clusters with ideal size using the nearest orders
                 nearest_orders = sort_objects_by_distance_from_obj(
@@ -58,7 +59,7 @@ def naive_approach_theo(challenge):  # Closest clusters approach
                     ideal_cluster_size
                 )
                 clusters[num_cluster].extend(nearest_orders)
-                clustered_orders.update(nearest_orders)
+                clustered_orders.extend(nearest_orders)
 
     current_drone_index = 0
     # Completing orders for each cluster
