@@ -1,9 +1,11 @@
 from Objects import Map, Drone
 from polyparser import parse_challenge
 from polywriter import Writer
-from polysolvers import (naive_approach_loic,
-                         naive_approach_theo,
-                         naive_approach_amedeo)
+from polysolvers import (
+    naive_approach_loic,
+    naive_approach_theo,
+    naive_approach_amedeo
+)
 from utils.functs import (
     current_payload_drone,
     find_closest_warehouse,
@@ -150,36 +152,36 @@ def test_naive_amedeo():
 def test_writer():
     # Testing if writer hasnt changed, if it have, you may want to update the
     # solutions stored in solutions_test to pass this test
-    Writer("challenges/a_example.in", "naive_loic")
-    assert set(open("solutions/a_example.out")) == set(
+    Writer("challenges/a_example.in", "loic")
+    assert set(open("solutions/solutions_loic/a_example.out")) == set(
         open("solutions_test/a_example_loic.test")
     )
 
-    Writer("challenges/b_busy_day.in", "naive_loic")
-    assert set(open("solutions/b_busy_day.out")) == set(
+    Writer("challenges/b_busy_day.in", "loic")
+    assert set(open("solutions/solutions_loic/b_busy_day.out")) == set(
         open("solutions_test/b_busy_day_loic.test")
     )
-    printg("Writer tests PASSED for naive_loic")
+    printg("Writer tests PASSED for loic")
 
-    Writer("challenges/a_example.in", "naive_theo")
-    assert set(open("solutions/a_example.out")) == set(
+    Writer("challenges/a_example.in", "theo")
+    assert set(open("solutions/solutions_theo/a_example.out")) == set(
         open("solutions_test/a_example_theo.test")
     )
 
-    Writer("challenges/b_busy_day.in", "naive_theo")
-    assert set(open("solutions/b_busy_day.out")) == set(
+    Writer("challenges/b_busy_day.in", "theo")
+    assert set(open("solutions/solutions_theo/b_busy_day.out")) == set(
         open("solutions_test/b_busy_day_theo.test")
     )
 
-    printg("Writer tests PASSED for naive_theo")
+    printg("Writer tests PASSED for theo")
 
-    Writer("challenges/a_example.in", "naive_amedeo")
-    assert set(open("solutions/a_example.out")) == set(
+    Writer("challenges/a_example.in", "amedeo")
+    assert set(open("solutions/solutions_amedeo/a_example.out")) == set(
         open("solutions_test/a_example_amedeo.test")
     )
 
-    Writer("challenges/b_busy_day.in", "naive_amedeo")
-    assert set(open("solutions/b_busy_day.out")) == set(
+    Writer("challenges/b_busy_day.in", "amedeo")
+    assert set(open("solutions/solutions_amedeo/b_busy_day.out")) == set(
         open("solutions_test/b_busy_day_amedeo.test")
     )
 

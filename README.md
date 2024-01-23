@@ -34,13 +34,13 @@ make install
 ```
 - Pour générer toutes les solutions du dossier `challenges` avec un algorithme (polyhash.py) :
 ```sh
-make generate naive_theo|naive_loic|naive_amedeo
+make generate theo|loic|amedeo
 ```
 Les solutions seront écrites dans le dossier `solutions`
 
 - Pour générer une solution en particulière avec un algorithme (polywriter.py) :
 ```sh
-make run naive_theo|naive_loic|naive_amedeo challenges/a_example.in
+make run theo|loic|amedeo challenges/a_example.in
 ```
 - Pour lancer notre module de tests (polytests.py) :
 ```sh
@@ -50,7 +50,7 @@ make tests
 ```sh
 make lint
 ```
-- Pour lancer tous nos tests et générer les solutions :
+- Pour lancer tous nos tests (linter et polytests) :
 ```sh
 make all
 ```

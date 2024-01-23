@@ -12,6 +12,10 @@ ifeq (viz,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
 endif
+ifeq (generate,$(firstword $(MAKECMDGOALS)))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
 
 run : install
 	@echo "================="
@@ -32,20 +36,12 @@ venv/bin/activate: requirements.txt
 
 install: venv/bin/activate
 
-generate_naive_loic: install
+generate: install
 	@echo "================="
-	@echo "Generating every solutions using naive_loic..."
+	@echo "Generating every solutions..."
 	@source venv/bin/activate
-	python src/polyhash.py naive_loic
-	@echo "Solutions generated successfully using naive_loic"
-	@echo "================="
-
-generate_naive_theo: install
-	@echo "================="
-	@echo "Generating every solutions using naive_theo..."
-	@source venv/bin/activate
-	python src/polyhash.py naive_theo
-	@echo "Solutions generated successfully using naive_theo"
+	python src/polyhash.py $(RUN_ARGS)
+	@echo "Solutions generated"
 	@echo "================="
 
 lint: install
@@ -73,12 +69,15 @@ viz: install
 	@echo "Success"
 	@echo "================="
 
-all: generate_naive_loic generate_naive_theo lint tests
+all: lint tests
 
 clean:
 	@echo "Cleaning  non-mandatory files..."
 	rm -rf __pycache__
 	rm -rf src/__pycache__
 	rm -rf venv
-	rm -f solutions/*
+	rm -f solutions/*.out
+	rm -f solutions_theo/*.out
+	rm -f solutions_loic/*.out
+	rm -f solutions_amedeo/*.out
 	@echo "Success"
