@@ -11,11 +11,11 @@ from utils.functs import (
 
 
 def printr(txt):
-    print("\033[91m {}\033[00m".format(txt))
+    print("\033[91m{}\033[00m".format(txt))
 
 
 def printg(txt):
-    print("\033[92m {}\033[00m".format(txt))
+    print("\033[92m{}\033[00m".format(txt))
 
 
 def test_drone():
@@ -115,11 +115,11 @@ def test_naive_theo():
     assert set(solution) == set(
         [
             "1 L 0 0 1",
-            "1 D 0 0 1",
-            "1 L 1 2 1",
-            "1 D 0 2 1",
+            "1 D 1 0 1",
             "2 L 0 0 1",
-            "2 D 1 0 1",
+            "2 D 0 0 1",
+            "2 L 1 2 1",
+            "2 D 0 2 1",
             "0 L 1 2 1",
             "0 D 2 2 1"
         ]

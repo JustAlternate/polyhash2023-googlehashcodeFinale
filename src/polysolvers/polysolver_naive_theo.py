@@ -4,8 +4,11 @@ from utils.functs import (
     find_closest_warehouse,
     qty_drone_can_load,
     makeCommand,
-    find_closest_cluster,
     find_closest_cluster_for_warehouse,
+    calc_total_weight_order,
+    sort_orders_by_weight,
+    sort_clusters_by_distance_from_cluster,
+    find_best_cluster
 )
 
 
@@ -23,21 +26,37 @@ def naive_approach_theo(challenge):  # Closest clusters approach
     solution = []
     challenge = parse_challenge(challenge)
 
-    # Need to be edited later to test different cluster sizes
-    ideal_cluster_size = 5
+    weightcoeff = 0.9
+    distcoeff = 0.1
 
+    # Need to be edited later to test different cluster sizes
+    ideal_cluster_size = 2
     orders = challenge.orders
+
+    for order in orders:
+
+        weight_order = calc_total_weight_order(challenge, order)
+        order.total_weight = weight_order
+
+    orders = sort_orders_by_weight(orders)
 
     clustered_orders = []
 
     clusters = {}
 
+    for weight_ind, order in enumerate(orders):
+
+        order.ranking_weight = (len(orders) - weight_ind) / len(orders)
+
     # Creating clusters
     for current_order in orders:
         if current_order not in clustered_orders:
-            num_cluster = len(clusters)
 
-            clusters[num_cluster] = [current_order]
+            num_cluster = len(clusters)
+            clusters[num_cluster] = [
+                [current_order], current_order.ranking_weight, 0, 0]
+            # for clusters : clusters[2] = dist ranking
+            # and clusters[3] ranking score
             clustered_orders.append(current_order)
 
             available_orders = [
@@ -47,19 +66,26 @@ def naive_approach_theo(challenge):  # Closest clusters approach
                 # Case when we don't have enough orders
                 # When we don't have enough orders, we add all the remaining
                 # orders to the current cluster without restrictions
+
                 for remaining_order in available_orders:
-                    clusters[num_cluster].append(remaining_order)
+                    clusters[num_cluster][0].append(remaining_order)
+                    clusters[num_cluster][1] += remaining_order.ranking_weight
                     clustered_orders.append(remaining_order)
 
-            else:  # We make clusters with ideal size using the nearest orders
+            # We make clusters with ideal size using the nearest orders
+            else:
                 nearest_orders = sort_objects_by_distance_from_obj(
                     challenge,
                     current_order,
                     available_orders,
                     ideal_cluster_size
                 )
-                clusters[num_cluster].extend(nearest_orders)
+                clusters[num_cluster][0].extend(nearest_orders)
+                for order in nearest_orders:
+                    clusters[num_cluster][1] += order.ranking_weight
                 clustered_orders.extend(nearest_orders)
+
+            clusters[num_cluster][1] /= len(clusters[num_cluster][0])
 
     current_drone_index = 0
     # Completing orders for each cluster
@@ -69,7 +95,7 @@ def naive_approach_theo(challenge):  # Closest clusters approach
         cluster = clusters[cluster_id]
 
         tmp_cluster = cluster.copy()
-        for order in cluster:  # Should i create a cluster class ?
+        for order in cluster[0]:  # Should i create a cluster class ?
             current_drone_index = (
                 current_drone_index + 1) % (len(challenge.drones))
             current_drone = challenge.drones[current_drone_index]
@@ -114,6 +140,14 @@ def naive_approach_theo(challenge):  # Closest clusters approach
 
         del clusters[cluster_id]
         if len(clusters) - 1 >= 0:
-            cluster_id = find_closest_cluster(challenge, tmp_cluster, clusters)
+            calc_clusters_by_dist = sort_clusters_by_distance_from_cluster(
+                challenge, tmp_cluster, clusters)
+
+            for ind_dist, id_cluster in enumerate(calc_clusters_by_dist):
+                cluster = clusters[id_cluster]
+                cluster[2] = (len(clusters) - ind_dist) / len(clusters)
+                cluster[3] = weightcoeff * cluster[1] + distcoeff * cluster[2]
+
+            cluster_id = find_best_cluster(clusters)
 
     return solution

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from polysolvers import (naive_approach_loic,
                          naive_approach_theo,
@@ -33,10 +33,7 @@ def Writer(challenge: str, method: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print(
-            "usage: python polywriter.py \
-             naive_loic|naive_theo|naive_amedeo \
-              challenges/ma_map.in"
-        )
+        print("usage: python polywriter.py \
+        naive_loic | naive_theo ../challenges/ma_map. in ")
     else:
         Writer(sys.argv[2], sys.argv[1])

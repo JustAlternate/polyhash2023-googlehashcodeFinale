@@ -1,4 +1,4 @@
-from Objects import Warehouse, Map
+from Objects import Warehouse, Map, Order
 from typing import Tuple
 
 
@@ -35,12 +35,13 @@ def find_closest_warehouse(
 
 
 def find_closest_cluster(Map, current_cluster, available_clusters):
+    # Need changes
     """
     Return the closest cluster
     """
     best_cluster = (-1, -1)
     for id_cluster, orders in available_clusters.items():
-        current_dist = Map.calc_dist(current_cluster[0], orders[0])
+        current_dist = Map.calc_dist(current_cluster[0][0], orders[0][0])
         if current_dist <= best_cluster[1] or best_cluster[1] == -1:
             best_cluster = (id_cluster, current_dist)
 
@@ -53,7 +54,7 @@ def find_closest_cluster_for_warehouse(Map, Warehouse, available_clusters):
     """
     best_cluster = (-1, -1)
     for id_cluster, orders in available_clusters.items():
-        current_dist = Map.calc_dist(Warehouse, orders[0])
+        current_dist = Map.calc_dist(Warehouse, orders[0][0])
         if current_dist <= best_cluster[1] or best_cluster[1] == -1:
             best_cluster = (id_cluster, current_dist)
 
@@ -191,3 +192,68 @@ def sort_objects_by_distance_from_obj(
         sorted_list = sorted_list[0: ideal_cluster_size - 1]
 
     return sorted_list
+
+
+def calc_total_weight_order(Map, Order) -> int:
+    """
+    Calc the total weight of an order
+    """
+    weights = Map.product_weights
+    total = 0
+
+    for product_type, nb_prod in enumerate(Order.products_qty):
+        total += weights[product_type] * nb_prod
+
+    return total
+
+
+def find_lightest_cluster(available_clusters):
+    """
+    Return the closest cluster for a warehouse.
+    """
+    best_cluster = (-1, -1)
+    for id_cluster, orders in available_clusters.items():
+
+        if orders[1] > best_cluster[1] or best_cluster[1] == -1:
+            best_cluster = (id_cluster, orders[1])
+
+    return best_cluster[0]
+
+
+def sort_clusters_by_distance_from_cluster(
+        Map,
+        cluster,
+        clusters_to_sort):
+    """
+    Take a Map, an object and a list of other objects.
+    Sort the list by closest to obj position.
+    """
+    sorted_list = []
+
+    for id_cluster, current_cluster in clusters_to_sort.items():
+        calc_dist = Map.calc_dist(cluster[0][0], current_cluster[0][0])
+        sorted_list.append((calc_dist, id_cluster))
+
+    sorted_list = sorted(sorted_list, key=lambda x: x[0])
+    sorted_list = [curr_cluster[1] for curr_cluster in sorted_list]
+
+    return sorted_list
+
+
+def sort_orders_by_weight(orders) -> list[Order]:
+    """
+    Sort orders by weight
+    """
+    sorted_orders = []
+    for order in orders:
+        sorted_orders.append((order, order.total_weight))
+
+    sorted_orders = sorted(sorted_orders, key=lambda x: x[1])
+    sorted_orders = [order[0] for order in sorted_orders]
+
+    return sorted_orders
+
+
+def find_best_cluster(clusters):
+
+    return max(clusters.items(), key=lambda x: x[1][3])[0]
