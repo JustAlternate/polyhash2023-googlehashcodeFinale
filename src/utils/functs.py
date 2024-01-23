@@ -30,31 +30,17 @@ def find_closest_warehouse(
         if qty == 0:
             raise Exception("No warehouse with enough stock")
 
-    print(best_warehouse, qty)
     return best_warehouse[0], qty
 
 
-def find_closest_cluster(Map, current_cluster, available_clusters):
+def find_closest_cluster_to_obj(Map, obj, available_clusters):
     # Need changes
     """
-    Return the closest cluster
+    Return the closest cluster to an object [Cluster | Warehouse]
     """
     best_cluster = (-1, -1)
     for id_cluster, orders in available_clusters.items():
-        current_dist = Map.calc_dist(current_cluster[0][0], orders[0][0])
-        if current_dist <= best_cluster[1] or best_cluster[1] == -1:
-            best_cluster = (id_cluster, current_dist)
-
-    return best_cluster[0]
-
-
-def find_closest_cluster_for_warehouse(Map, Warehouse, available_clusters):
-    """
-    Return the closest cluster for a warehouse.
-    """
-    best_cluster = (-1, -1)
-    for id_cluster, orders in available_clusters.items():
-        current_dist = Map.calc_dist(Warehouse, orders[0][0])
+        current_dist = Map.calc_dist(obj, orders[0][0])
         if current_dist <= best_cluster[1] or best_cluster[1] == -1:
             best_cluster = (id_cluster, current_dist)
 
@@ -97,27 +83,6 @@ def max_qty_allowed_to_load(Map, Drone, product_type: int) -> int:
     allowed_payload = max_payload - current_payload
 
     return allowed_payload // product_weight
-
-
-def find_best_order(Map, Drone):  # Might use this later
-    """
-    return the index of the best order for a drone
-    to deliver choosed by amount of products that
-    the drone can deliver and then by distance
-    """
-    orders = []
-    # Order by qty then dist
-    for index_order, order in enumerate(Map.orders):
-        dist = Map.calc_dist(order, Drone)
-        nb_prod_can_deliver = 0
-
-        for prod_type, qty in enumerate(order.products_qty):
-            nb_prod_can_deliver += min(qty, Drone.stock[prod_type])
-
-        orders.append((index_order, nb_prod_can_deliver, dist))
-
-    best = sorted(orders, key=lambda x: (-x[1], x[2]))[0]
-    return best[0]
 
 
 def makeCommand(
@@ -207,19 +172,6 @@ def calc_total_weight_order(Map, Order) -> int:
     return total
 
 
-def find_lightest_cluster(available_clusters):
-    """
-    Return the closest cluster for a warehouse.
-    """
-    best_cluster = (-1, -1)
-    for id_cluster, orders in available_clusters.items():
-
-        if orders[1] > best_cluster[1] or best_cluster[1] == -1:
-            best_cluster = (id_cluster, orders[1])
-
-    return best_cluster[0]
-
-
 def sort_clusters_by_distance_from_cluster(
         Map,
         cluster,
@@ -255,5 +207,7 @@ def sort_orders_by_weight(orders) -> list[Order]:
 
 
 def find_best_cluster(clusters):
-
+    """
+    Find the best cluster by ranking
+    """
     return max(clusters.items(), key=lambda x: x[1][3])[0]
