@@ -4,11 +4,11 @@ from utils.functs import (
     find_closest_warehouse,
     max_qty_allowed_to_load,
     makeCommand,
-    find_closest_cluster_for_warehouse,
     calc_total_weight_order,
     sort_orders_by_weight,
     sort_clusters_by_distance_from_cluster,
-    find_best_cluster
+    find_best_cluster,
+    find_closest_cluster_to_obj,
 )
 
 import copy
@@ -108,7 +108,7 @@ def naive_approach_theo(challenge: str) -> List[str]:
     # Completing orders for each cluster
 
     # The first cluster chosen is the one with the highest ranking score
-    cluster_id = find_closest_cluster_for_warehouse(
+    cluster_id = find_closest_cluster_to_obj(
         challenge, challenge.warehouses[0], clusters)
 
     # We iterate through the drones to complete the clusters
