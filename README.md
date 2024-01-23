@@ -12,12 +12,51 @@ Utilisation du "issues_board" de gitlab pour la gestion des tickets, et politiqu
 - Loïc Weber - loic.weber@etu.univ-nantes.fr
 - Amedeo Calcagni - amedeo.calcagni@etu.univ-nantes.fr
 
+## Prérequis
+- Python3
+```sh
+sudo apt install python3
+```
+- pip 
+```sh
+python -m ensurepip --upgrade
+```
+
 ## Fonctionnement du projet
 ========================
 
-Description du fonctionnement du projet, notamment comment le lancer (paramètres, etc).
+Afin d'utiliser notre projet, nous conseillons vivement d'**utiliser notre Makefile** avec la commande `make`.
+Celle-ci devrait permettre de faire tout ce que vous avez besoin.
 
-La syntaxe générale/minimale est
+- Pour installer les dépendances du projet et créer l'environnement python :
+```shell
+make install
+```
+- Pour générer toutes les solutions du dossier `challenges` avec un algorithme (polyhash.py) :
+```sh
+make generate naive_theo|naive_loic|naive_amedeo
+```
+Les solutions seront écrites dans le dossier `solutions`
 
-    polywriter.py naive_loic challenges/a_example.in
+- Pour générer une solution en particulière avec un algorithme (polywriter.py) :
+```sh
+make run naive_theo|naive_loic|naive_amedeo challenges/a_example.in
+```
+- Pour lancer notre module de tests (polytests.py) :
+```sh
+make tests
+```
+- Pour lancer nos tests de formatage (pep8 et flake8) :
+```sh
+make lint
+```
+- Pour lancer tous nos tests et générer les solutions :
+```sh
+make all
+```
+- Pour supprimer les fichiers non essentiels :
+```sh
+make clean
+```
+
 

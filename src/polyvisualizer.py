@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from polyparser import parse_challenge
 import sys
@@ -34,7 +34,7 @@ def map_visualizer_init(challenge):
         grid[dest[0]][dest[1]] = (printr(warehouse_index), warehouse_index)
 
     for order_index in range(len(challenge.orders)):
-        dest = challenge.orders[order_index].destination
+        dest = challenge.orders[order_index].position
         grid[dest[0]][dest[1]] = (printg(order_index), order_index)
 
     for row in grid:

@@ -9,11 +9,11 @@ from utils.functs import (
 
 
 def printr(txt):
-    print("\033[91m {}\033[00m".format(txt))
+    print("\033[91m{}\033[00m".format(txt))
 
 
 def printg(txt):
-    print("\033[92m {}\033[00m".format(txt))
+    print("\033[92m{}\033[00m".format(txt))
 
 
 def test_drone():

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 from polyparser import parse_challenge
 from utils.functs import (
     qty_drone_can_load,
