@@ -17,14 +17,14 @@ run : install
 	@echo "================="
 	@echo "Generating a solution using polywriter..."
 	@source venv/bin/activate
-	python3 src/polywriter.py $(RUN_ARGS)
+	python src/polywriter.py $(RUN_ARGS)
 	@echo "Solutions completed"
 	@echo "================="
 
 venv/bin/activate: requirements.txt
 	@echo "================="
 	@echo "Installing packages..."
-	python3 -m venv venv
+	python -m venv venv
 	@source venv/bin/activate
 	venv/bin/pip install -r requirements.txt
 	@echo "Packages successfully installed"
@@ -36,7 +36,7 @@ generate_naive_loic: install
 	@echo "================="
 	@echo "Generating every solutions using naive_loic..."
 	@source venv/bin/activate
-	python3 src/polyhash.py naive_loic
+	python src/polyhash.py naive_loic
 	@echo "Solutions generated successfully using naive_loic"
 	@echo "================="
 
@@ -44,7 +44,7 @@ generate_naive_theo: install
 	@echo "================="
 	@echo "Generating every solutions using naive_theo..."
 	@source venv/bin/activate
-	python3 src/polyhash.py naive_theo
+	python src/polyhash.py naive_theo
 	@echo "Solutions generated successfully using naive_theo"
 	@echo "================="
 
@@ -61,7 +61,7 @@ tests: install
 	@echo "================="
 	@echo "Launching tests..."
 	@source venv/bin/activate
-	python3 src/polytests.py
+	python src/polytests.py
 	@echo "Success"
 	@echo "================="
 
@@ -69,7 +69,7 @@ viz: install
 	@echo "================="
 	@echo "Launching visualization..."
 	@source venv/bin/activate
-	python3 src/polyvisualizer.py $(RUN_ARGS)
+	python src/polyvisualizer.py $(RUN_ARGS)
 	@echo "Success"
 	@echo "================="
 
