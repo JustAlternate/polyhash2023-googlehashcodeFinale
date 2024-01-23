@@ -13,9 +13,9 @@ Utilisation du "issues_board" de gitlab pour la gestion des tickets, et politiqu
 - Amedeo Calcagni - amedeo.calcagni@etu.univ-nantes.fr
 
 ## Prérequis
-- Python3
+- Python
 ```sh
-sudo apt install python3
+sudo apt install python
 ```
 - pip 
 ```sh
