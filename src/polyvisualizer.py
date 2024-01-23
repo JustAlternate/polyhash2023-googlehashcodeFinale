@@ -42,7 +42,7 @@ def map_visualizer_init(challenge):
         print("|", end="")
         for item in row:
             print(item[0] + (str(" ")
-                  * (number_needed - len(str(item[1])))), end="")
+                             * (number_needed - len(str(item[1])))), end="")
 
             print("|", end="")
     print("\n")
