@@ -129,7 +129,7 @@ def test_naive_theo():
 
 
 def test_naive_amedeo():
-    solution = naive_approach_loic("challenges/a_example.in")
+    solution = naive_approach_amedeo("challenges/a_example.in")
     # Must use set to tests equity between 2 lists.
     assert set(solution) == set(
         [
@@ -183,7 +183,7 @@ def test_writer():
         open("solutions_test/b_busy_day_amedeo.test")
     )
 
-    printg("Writer tests PASSED for naive_theo")
+    printg("Writer tests PASSED for naive_amedeo")
 
     printg("Writer tests COMPLETED")
 
