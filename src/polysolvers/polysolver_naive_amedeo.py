@@ -2,12 +2,6 @@
 # -*- coding: utf-8 -*-
 from Objects import Order, Map
 from polyparser import parse_challenge
-from utils.functs import (
-    sort_objects_by_distance_from_obj,
-    find_closest_warehouse,
-    qty_drone_can_load,
-    makeCommand,
-)
 
 """
 Module de résolution du projet Poly#.
@@ -15,22 +9,20 @@ Module de résolution du projet Poly#.
 
 
 class Destination:
-    """
-    Classe qui regroupe les orders qui ont la meme destination
-    et qui permet de les considerer comme un seul order
-    """
-
     def __init__(self, position: tuple[int, int], game_map: Map):
         self.position: tuple[int, int] = position
-        # Regroupe les orders par type de produit
         self.order_by_type: list[list[Order]] = \
             [[] for _ in range(len(game_map.product_weights))]
-        # Somme des quantités de chaque type de produit
         self.sum_qty_type: list[int] = \
             [0 for _ in range(len(game_map.product_weights))]
         # Tri des distances entre la destination et toutes les warehouses
-        self.index_nearby_warehouse = Utils.sort_objects_by_distance_from_obj(
-            game_map, self, game_map.warehouses)
+        self.index_nearby_warehouse = []
+        for index_w, warehouse in enumerate(game_map.warehouses):
+            self.index_nearby_warehouse.append(
+                (Map.calc_dist(warehouse, self), warehouse))
+        self.index_nearby_warehouse.sort(key=lambda x: x[0])
+        self.index_nearby_warehouse = \
+            [i[1] for i in self.index_nearby_warehouse]
 
     def add(self, order: Order):
         for product, qty in enumerate(order.products_qty):
@@ -57,16 +49,13 @@ def naive_approach_amedeo(challenge):
     # resemble les orders qui ont la meme destination
     order_trier_par_destination = {}
     for order in gameM.orders:
-        if order.position not in order_trier_par_destination:
+        if order.position not in order_trier_par_destination.keys():
             order_trier_par_destination[order.position] = Destination(
                 order.position, gameM)
         order_trier_par_destination[order.position].add(order)
 
-    Destination_trier = Utils.sort_objects_by_distance_from_obj(
-        gameM, gameM.warehouses[0], order_trier_par_destination.values())
-
     # pour une meme destination
-    for destination in order_trier_par_destination:
+    for destination in order_trier_par_destination.values():
 
         # pour chaque type de produit
         for prodT, product_qty in enumerate(destination.sum_qty_type):
