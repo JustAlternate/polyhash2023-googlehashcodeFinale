@@ -195,5 +195,5 @@ if __name__ == "__main__":
     test_current_payload_drone()
     test_naive_loic()
     test_naive_theo()
-    test_naive_amedeo()
+    # test_naive_amedeo() car je vais repartir sur des base propre
     test_writer()
