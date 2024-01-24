@@ -110,7 +110,8 @@ def naive_approach_autre(challenge):
                 # (pourais faire le plus proche nope car il faut aussi trier les warehouse)
                 while dCurent.total_load + gameM.product_weights[prodT] >= gameM.max_payload:
                     if (dPointer + 1) % gameM.nb_drones == 0:
-                        videDrone(commendL, commendD, solution, dCurent, gameM, oCurent)
+                        dDrone(gameM, commendD)
+                        vidageDrone(commendL, commendD, solution)
                     dPointer = (dPointer + 1) % gameM.nb_drones
                     dCurent = gameM.drones[dPointer]
                     print("drone : ", dPointer)
@@ -131,30 +132,42 @@ def naive_approach_autre(challenge):
                 # On ajoute 1 objet au drone
                 dCurent.stock[prodT] += qtyL
                 dCurent.total_load += gameM.product_weights[prodT] * qtyL
+                oCurent.drones.append(dCurent)
+
+                # on enleve le produit de la commande
 
                 print("total", dCurent.id, dCurent.total_load)
 
                 # On suprime 1 objet a faire a l'order
                 oCurent.products_qty[prodT] -= qtyL
 
-        videDrone(commendL, commendD, solution, dCurent, gameM, oCurent)
-
+    dDrone(gameM, commendD)
+    vidageDrone(commendL, commendD, solution)
     return solution
 
 
-def videDrone(commendL, commendD, solution, dCurent, gameM, oCurent):
-    print("vidage")
-    for prodT, prodQTY in enumerate(dCurent.stock):
-        if prodQTY > 0:
-            commendD.append((dCurent.id, oCurent.id, prodT, prodQTY))
-            # On remove 1 objet de order
-            oCurent.products_qty[prodT] -= prodQTY
-            # On ajoute 1 objet au drone
-            dCurent.stock[prodT] -= prodQTY
-            dCurent.total_load -= gameM.product_weights[prodT] * prodQTY
+def dDrone(gameM, commendD):
+    for o in gameM.orders:
+        for d in o.drones:
+            for prodT, prodQTY in enumerate(d.stock):
+                if prodQTY > 0:
+                    print("dDrone : ", d.id, "order : ", o.id)
+                    commendD.append((d.id, o.id, prodT, prodQTY))
+                    # On remove 1 objet de order
+                    o.products_qty[prodT] -= prodQTY
+                    # On supprime 1 objet au drone
+                    d.stock[prodT] -= prodQTY
+                    d.total_load -= gameM.product_weights[prodT] * prodQTY
+            # On suprime car le drone a l'order
+            o.drones.remove(d)
+
+
+def vidageDrone(commendL, commendD, solution):
+    print("vidageDrone")
     for c in commendL:
         makeCommand("L", solution, *c)
     commendL.clear()
     for c in commendD:
         makeCommand("D", solution, *c)
     commendD.clear()
+    return solution
