@@ -34,7 +34,7 @@ install: venv/bin/activate
 run : install
 	@echo "================="
 	@echo "Generating a solution using polywriter..."
-	source venv/bin/activate python src/polywriter.py $(RUN_ARGS)
+	source venv/bin/activate && python src/polywriter.py $(RUN_ARGS)
 	@echo "Solutions completed"
 	@echo "================="
 
