@@ -4,9 +4,9 @@
 """
 Module de résolution du projet Poly#.
 """
-from src.Objects import Map
-from src.polyparser import parse_challenge
-from src.utils.functs import sort_objects_by_distance_from_obj, makeCommand
+from Objects import Map
+from polyparser import parse_challenge
+from utils.functs import sort_objects_by_distance_from_obj, makeCommand
 
 
 # class Destination:

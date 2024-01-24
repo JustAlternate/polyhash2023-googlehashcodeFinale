@@ -2,7 +2,7 @@
 # is for the shell on windows and linux
 ifdef OS
 ifeq ($(OS),Windows_NT)
-	SHELL := C:\Program Files\PowerShell\7\pwsh.exe
+	SHELL := "C:\Program Files\PowerShell\7\pwsh.exe"
     Source := .\venv\Scripts\Activate
 endif
 else

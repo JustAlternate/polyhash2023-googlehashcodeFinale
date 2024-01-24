@@ -1,8 +1,8 @@
 from Objects import Warehouse, Map, Order
 from typing import Tuple
 
-from src.Objects import Warehouse, Order
-from src.Objects.Map import Map
+from Objects import Warehouse, Order
+from Objects.Map import Map
 
 
 def find_closest_warehouse(

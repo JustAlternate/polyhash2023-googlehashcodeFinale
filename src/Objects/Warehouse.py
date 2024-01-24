@@ -1,4 +1,4 @@
-from src.Objects import Order
+from Objects import Order
 
 
 class Warehouse:

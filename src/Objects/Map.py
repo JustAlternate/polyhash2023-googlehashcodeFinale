@@ -1,6 +1,6 @@
 from math import sqrt, ceil
 
-from src.Objects import Warehouse, Drone, Order
+from Objects import Warehouse, Drone, Order
 
 
 class Map:

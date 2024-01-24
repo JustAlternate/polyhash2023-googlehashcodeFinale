@@ -1,4 +1,4 @@
-from src.Objects import Drone
+from Objects import Drone
 
 
 class Order:
