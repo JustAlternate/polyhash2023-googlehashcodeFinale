@@ -1,15 +1,15 @@
 from Objects import Warehouse, Map, Order
 from typing import Tuple
 
-from Objects import Warehouse, Order
-from Objects.Map import Map
+from src.Objects import Warehouse, Order
+from src.Objects.Map import Map
 
 
 def find_closest_warehouse(
-    Map,
-    drone_index: int,
-    item_type: int,
-    qty: int
+        Map,
+        drone_index: int,
+        item_type: int,
+        qty: int
 ) -> Tuple[Warehouse, int]:
     """
     Return the closest warehouse with the maximum
@@ -89,12 +89,12 @@ def max_qty_allowed_to_load(Map, Drone, product_type: int) -> int:
 
 
 def makeCommand(
-    action: str,
-    solution: list,
-    drone_id: int,
-    dest_id: int,
-    product_type: int,
-    qty: int,
+        action: str,
+        solution: list,
+        drone_id: int,
+        dest_id: int,
+        product_type: int,
+        qty: int,
 ) -> None:
     """
     Take an action either "L" or "D" and write a

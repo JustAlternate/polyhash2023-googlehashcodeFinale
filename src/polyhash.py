@@ -1,7 +1,7 @@
 import os
 import sys
 
-from polywriter import Writer
+from src.polywriter import Writer
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
