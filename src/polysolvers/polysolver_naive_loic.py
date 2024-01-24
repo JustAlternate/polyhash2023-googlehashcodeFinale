@@ -1,14 +1,8 @@
-from polyparser import parse_challenge
-from utils.functs import (
-    qty_drone_can_load,
-    find_closest_warehouse,
-    makeCommands,
-    sort_objects_by_distance_from_obj,
-)
-
 """
 Module de résolution du projet Poly#.
 """
+from polyparser import parse_challenge
+from utils.functs import sort_objects_by_distance_from_obj, makeCommands, qty_drone_can_load, find_closest_warehouse
 
 
 def naive_approach_loic(fichier_challenge):
@@ -58,11 +52,11 @@ def naive_approach_loic(fichier_challenge):
 
                 queue_load.append(
                     [current_drone_index, found_warehouse.id,
-                        product_type, qty_found]
+                     product_type, qty_found]
                 )
                 queue_deliver.append(
                     [current_drone_index, current_order.id,
-                        product_type, qty_found]
+                     product_type, qty_found]
                 )
 
                 current_drone.position = current_order.position
@@ -73,7 +67,7 @@ def naive_approach_loic(fichier_challenge):
 
                 # Change drone
                 current_drone_index = (
-                    current_drone_index + 1) % (len(challenge.drones))
+                                              current_drone_index + 1) % (len(challenge.drones))
 
     # In case there is remaining command to make in the queues.
     makeCommands(solution, queue_load, queue_deliver)

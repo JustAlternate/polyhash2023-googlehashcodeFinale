@@ -1,16 +1,17 @@
-from Objects import Drone, Warehouse, Order
-from math import ceil, sqrt
+from math import sqrt, ceil
+
+from Objects import Warehouse, Drone, Order
 
 
 class Map:
     def __init__(
-        self,
-        rows: int,
-        cols: int,
-        nb_drones: int,
-        nb_turns: int,
-        max_payload: int,
-        product_weights: list[int],
+            self,
+            rows: int,
+            cols: int,
+            nb_drones: int,
+            nb_turns: int,
+            max_payload: int,
+            product_weights: list[int],
     ):
         self.rows: int = rows
         self.cols: int = cols

@@ -17,10 +17,18 @@ ifeq (generate,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
+ifdef OS
+   Source = call venv/Scripts/activate.ps1
+else
+   ifeq ($(shell uname), Linux)
+      Source = source venv/bin/activate
+   endif
+endif
+
 run : install
 	@echo "================="
 	@echo "Generating a solution using polywriter..."
-	@source venv/bin/activate
+	@$(Source)
 	python src/polywriter.py $(RUN_ARGS)
 	@echo "Solutions completed"
 	@echo "================="
@@ -29,17 +37,17 @@ venv/bin/activate: requirements.txt
 	@echo "================="
 	@echo "Installing packages..."
 	python -m venv venv
-	@source venv/bin/activate
+	@$(Source) 
 	venv/bin/pip install -r requirements.txt
 	@echo "Packages successfully installed"
 	@echo "================="
 
-install: venv/bin/activate
+install: 
 
 generate: install
 	@echo "================="
 	@echo "Generating every solutions..."
-	@source venv/bin/activate
+	@$(Source) 
 	python src/polyhash.py $(RUN_ARGS)
 	@echo "Solutions generated"
 	@echo "================="
@@ -47,7 +55,7 @@ generate: install
 lint: install
 	@echo "================="
 	@echo "Looking for linting and formating errors using flake8 and pep8 rules..."
-	@source venv/bin/activate
+	@$(Source) 
 	flake8 src --ignore=F401,W503,W292
 	pycodestyle src --ignore=W503,W292
 	@echo "No rule violations found, code should be pretty enough :D"
@@ -56,7 +64,7 @@ lint: install
 tests: install
 	@echo "================="
 	@echo "Launching tests..."
-	@source venv/bin/activate
+	@$(Source) 
 	python src/polytests.py
 	@echo "Success"
 	@echo "================="
@@ -64,7 +72,7 @@ tests: install
 viz: install
 	@echo "================="
 	@echo "Launching visualization..."
-	@source venv/bin/activate
+	@$(Source) 
 	python src/polyvisualizer.py $(RUN_ARGS)
 	@echo "Success"
 	@echo "================="

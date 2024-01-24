@@ -1,15 +1,7 @@
 from polyparser import parse_challenge
-from utils.functs import (
-    sort_objects_by_distance_from_obj,
-    find_closest_warehouse,
-    qty_drone_can_load,
-    makeCommand,
-    find_closest_cluster_for_warehouse,
-    calc_total_weight_order,
-    sort_orders_by_weight,
-    sort_clusters_by_distance_from_cluster,
-    find_best_cluster
-)
+from utils.functs import calc_total_weight_order, sort_orders_by_weight, sort_objects_by_distance_from_obj, \
+    find_closest_cluster_for_warehouse, qty_drone_can_load, find_closest_warehouse, makeCommand, \
+    sort_clusters_by_distance_from_cluster, find_best_cluster
 
 
 def naive_approach_theo(challenge):  # Closest clusters approach
@@ -34,7 +26,6 @@ def naive_approach_theo(challenge):  # Closest clusters approach
     orders = challenge.orders
 
     for order in orders:
-
         weight_order = calc_total_weight_order(challenge, order)
         order.total_weight = weight_order
 
@@ -45,7 +36,6 @@ def naive_approach_theo(challenge):  # Closest clusters approach
     clusters = {}
 
     for weight_ind, order in enumerate(orders):
-
         order.ranking_weight = (len(orders) - weight_ind) / len(orders)
 
     # Creating clusters
@@ -97,7 +87,7 @@ def naive_approach_theo(challenge):  # Closest clusters approach
         tmp_cluster = cluster.copy()
         for order in cluster[0]:  # Should i create a cluster class ?
             current_drone_index = (
-                current_drone_index + 1) % (len(challenge.drones))
+                                          current_drone_index + 1) % (len(challenge.drones))
             current_drone = challenge.drones[current_drone_index]
             for product_type in range(len(order.products_qty)):
                 while order.products_qty[product_type] != 0:

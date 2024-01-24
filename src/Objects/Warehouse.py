@@ -1,4 +1,4 @@
-from Objects.Order import Order
+from Objects import Order
 
 
 class Warehouse:
@@ -7,6 +7,7 @@ class Warehouse:
         self.position: tuple[int, int] = position
         self.stock: list[int] = stock  # Qty
         self.nearest_orders = list[Order]
+        self.type_of_order = list[int]  # used by naive_amedeo
 
     def is_empty(self):
         return self.stock == [0 for i in range(len(self.stock))]

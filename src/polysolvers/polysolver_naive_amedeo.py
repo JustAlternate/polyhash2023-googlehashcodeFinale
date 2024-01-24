@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from Objects import Order, Map
-from polyparser import parse_challenge
+
 
 """
 Module de résolution du projet Poly#.
 """
+
+from Objects import Map, Order
+from polyparser import parse_challenge
 
 
 class Destination:
@@ -32,7 +34,7 @@ class Destination:
         return self
 
 
-def naive_approach_amedeo(challenge):
+def naive_amedeo(challenge):
     """
     Naive approach that use every drones one by one
     and cycle through each orders
@@ -125,6 +127,3 @@ def naive_approach_amedeo(challenge):
                     ordC.products_qty[prodT] -= qtyL
 
     return solution
-
-
-naive_approach_amedeo("challenges/a_example.in")

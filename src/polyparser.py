@@ -1,4 +1,7 @@
-from Objects import Map, Order, Drone, Warehouse
+from Objects.Map import Map
+from Objects.Warehouse import Warehouse
+from Objects.Order import Order
+from Objects.Drone import Drone
 
 """
 Module de parsing des fichiers d'entrée pour

@@ -1,12 +1,14 @@
-from Objects import Warehouse, Map, Order
 from typing import Tuple
+
+from Objects import Warehouse, Order
+from Objects.Map import Map
 
 
 def find_closest_warehouse(
-    Map,
-    drone_index: int,
-    item_type: int,
-    qty: int
+        Map,
+        drone_index: int,
+        item_type: int,
+        qty: int
 ) -> Tuple[Warehouse, int]:
     """
     Return the closest warehouse with the maximum
@@ -121,12 +123,12 @@ def find_best_order(Map, Drone):  # Might use this later
 
 
 def makeCommand(
-    action: str,
-    Solution: list,
-    drone_id: int,
-    dest_id: int,
-    product_type: int,
-    qty: int,
+        action: str,
+        Solution: list,
+        drone_id: int,
+        dest_id: int,
+        product_type: int,
+        qty: int,
 ) -> None:
     """
     Take an action either "L" or "D" and write a
@@ -255,5 +257,4 @@ def sort_orders_by_weight(orders) -> list[Order]:
 
 
 def find_best_cluster(clusters):
-
     return max(clusters.items(), key=lambda x: x[1][3])[0]
