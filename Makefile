@@ -17,59 +17,52 @@ ifeq (generate,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-run : install
-	@echo "================="
-	@echo "Generating a solution using polywriter..."
-	@source venv/bin/activate
-	python src/polywriter.py $(RUN_ARGS)
-	@echo "Solutions completed"
-	@echo "================="
-
 venv/bin/activate: requirements.txt
 	@echo "================="
 	@echo "Installing packages..."
 	python -m venv venv
-	@source venv/bin/activate
-	venv/bin/pip install -r requirements.txt
+	source venv/bin/activate && venv/bin/pip install -r requirements.txt
 	@echo "Packages successfully installed"
 	@echo "================="
 
 install: venv/bin/activate
 
+run : install
+	@echo "================="
+	@echo "Generating a solution using polywriter..."
+	source venv/bin/activate python src/polywriter.py $(RUN_ARGS)
+	@echo "Solutions completed"
+	@echo "================="
+
 generate: install
 	@echo "================="
 	@echo "Generating every solutions..."
-	@source venv/bin/activate
-	python src/polyhash.py $(RUN_ARGS)
+	source venv/bin/activate && python src/polyhash.py $(RUN_ARGS)
 	@echo "Solutions generated"
 	@echo "================="
 
 lint: install
 	@echo "================="
 	@echo "Looking for linting and formating errors using flake8 and pep8 rules..."
-	@source venv/bin/activate
-	flake8 src --ignore=F401,W503,W292
-	pycodestyle src --ignore=W503,W292
+	source venv/bin/activate && flake8 src --ignore=F401,W503,W292 && pycodestyle src --ignore=W503,W292
 	@echo "No rule violations found, code should be pretty enough :D"
 	@echo "================="
 
 tests: install
 	@echo "================="
 	@echo "Launching tests..."
-	@source venv/bin/activate
-	python src/polytests.py
+	source venv/bin/activate && python src/polytests.py
 	@echo "Success"
 	@echo "================="
 
 viz: install
 	@echo "================="
 	@echo "Launching visualization..."
-	@source venv/bin/activate
-	python src/polyvisualizer.py $(RUN_ARGS)
+	source venv/bin/activate && python src/polyvisualizer.py $(RUN_ARGS)
 	@echo "Success"
 	@echo "================="
 
-all: lint tests
+all: install lint tests
 
 clean:
 	@echo "Cleaning  non-mandatory files..."
