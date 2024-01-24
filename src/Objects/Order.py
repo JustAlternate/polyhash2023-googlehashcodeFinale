@@ -13,4 +13,4 @@ class Order:
         self.ranking_weight: float = 0.0  # Used by naive_theo
 
     def check_full_filled(self):
-        return self.products_qty == [0 * len(self.products_qty)]
+        return self.products_qty == [0] * len(self.products_qty)

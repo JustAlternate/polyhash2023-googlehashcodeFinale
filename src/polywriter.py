@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from polysolvers import (naive_approach_loic,
+                         naive_approach_theo,
+                         naive_approach_amedeo)
 import sys
 
 from polysolvers.polysolver_autre import naive_approach_autre
@@ -20,10 +23,10 @@ def Writer(challenge: str, method: str) -> None:
 
     # basename the challenge name and add .out at the end.
     output_name = (
-            "solutions/" + "solutions_"
-            + str(method)
-            + "/"
-            + str(str(challenge.split("/")[-1]).split(".")[0]) + ".out"
+        "solutions/" + "solutions_"
+        + str(method)
+        + "/"
+        + str(str(challenge.split("/")[-1]).split(".")[0]) + ".out"
     )
 
     with open(output_name, "w") as f:
@@ -36,6 +39,6 @@ def Writer(challenge: str, method: str) -> None:
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("usage: python polywriter.py \
-        loic | theo | amedeo ../challenges/ma_map. in ")
+        loic | theo | amedeo challenges/ma_map.in ")
     else:
         Writer(sys.argv[2], sys.argv[1])

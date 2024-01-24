@@ -17,67 +17,52 @@ ifeq (generate,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
-ifdef OS
-   Source = call venv/Scripts/activate.ps1
-else
-   ifeq ($(shell uname), Linux)
-      Source = source venv/bin/activate
-   endif
-endif
-
-run : install
-	@echo "================="
-	@echo "Generating a solution using polywriter..."
-	@$(Source)
-	python src/polywriter.py $(RUN_ARGS)
-	@echo "Solutions completed"
-	@echo "================="
-
 venv/bin/activate: requirements.txt
 	@echo "================="
 	@echo "Installing packages..."
 	python -m venv venv
-	@$(Source) 
-	venv/bin/pip install -r requirements.txt
+	source venv/bin/activate && venv/bin/pip install -r requirements.txt
 	@echo "Packages successfully installed"
 	@echo "================="
 
-install: 
+install: venv/bin/activate
+
+run : install
+	@echo "================="
+	@echo "Generating a solution using polywriter..."
+	source venv/bin/activate python src/polywriter.py $(RUN_ARGS)
+	@echo "Solutions completed"
+	@echo "================="
 
 generate: install
 	@echo "================="
 	@echo "Generating every solutions..."
-	@$(Source) 
-	python src/polyhash.py $(RUN_ARGS)
+	source venv/bin/activate && python src/polyhash.py $(RUN_ARGS)
 	@echo "Solutions generated"
 	@echo "================="
 
 lint: install
 	@echo "================="
 	@echo "Looking for linting and formating errors using flake8 and pep8 rules..."
-	@$(Source) 
-	flake8 src --ignore=F401,W503,W292
-	pycodestyle src --ignore=W503,W292
+	source venv/bin/activate && flake8 src --ignore=F401,W503,W292 && pycodestyle src --ignore=W503,W292
 	@echo "No rule violations found, code should be pretty enough :D"
 	@echo "================="
 
 tests: install
 	@echo "================="
 	@echo "Launching tests..."
-	@$(Source) 
-	python src/polytests.py
+	source venv/bin/activate && python src/polytests.py
 	@echo "Success"
 	@echo "================="
 
 viz: install
 	@echo "================="
 	@echo "Launching visualization..."
-	@$(Source) 
-	python src/polyvisualizer.py $(RUN_ARGS)
+	source venv/bin/activate && python src/polyvisualizer.py $(RUN_ARGS)
 	@echo "Success"
 	@echo "================="
 
-all: lint tests
+all: install lint tests
 
 clean:
 	@echo "Cleaning  non-mandatory files..."
