@@ -16,6 +16,10 @@ ifeq (generate,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
 endif
+ifeq (bench,$(firstword $(MAKECMDGOALS)))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
 
 venv/bin/activate: requirements.txt
 	@echo "================="
@@ -59,6 +63,13 @@ viz: install
 	@echo "================="
 	@echo "Launching visualization..."
 	source venv/bin/activate && python src/polyvisualizer.py $(RUN_ARGS)
+	@echo "Success"
+	@echo "================="
+
+bench: install
+	@echo "================="
+	@echo "Launching benchmarks..."
+	source venv/bin/activate && python src/polybench.py $(RUN_ARGS)
 	@echo "Success"
 	@echo "================="
 
