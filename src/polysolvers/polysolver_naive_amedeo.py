@@ -79,7 +79,7 @@ def naive_amedeo(challenge):
 
                     # meilleur distance entre tous les drones et les warehouse
                     droneCI = min(
-                        warehouseDroneDist[warehouse.id].items(),
+                        warehouseDroneDist[warehouse.index].items(),
                         key=lambda t: t[1])
 
                     droneCI = droneCI[0]
@@ -89,20 +89,20 @@ def naive_amedeo(challenge):
                     # et le nombre element restant à expedier
                     qtyL = min(
                         gameM.max_payload // gameM.product_weights[prodT],
-                        gameM.warehouses[warehouse.id].stock[prodT],
+                        gameM.warehouses[warehouse.index].stock[prodT],
                         ordC.products_qty[prodT])
 
                     solution.append(
                         str(droneCI)
                         + " L "
-                        + str(warehouse.id)
+                        + str(warehouse.index)
                         + " "
                         + str(prodT)
                         + " "
                         + str(qtyL)
                     )
                     # On remove 1 objet de la warehouse
-                    gameM.warehouses[warehouse.id].stock[prodT] -= qtyL
+                    gameM.warehouses[warehouse.index].stock[prodT] -= qtyL
 
                     if warehouse.stock[prodT] <= 0:
                         del warehouseWithP[0]
@@ -110,7 +110,7 @@ def naive_amedeo(challenge):
                     solution.append(
                         str(droneCI)
                         + " D "
-                        + str(ordC.id)
+                        + str(ordC.index)
                         + " "
                         + str(prodT)
                         + " "

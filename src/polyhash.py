@@ -19,4 +19,6 @@ if __name__ == "__main__":
                 Writer(sys.argv[2], sys.argv[1])
             else:
                 for file in os.listdir("challenges/"):
+                    if file.endswith(".in"):
+                        print("Generating solution for " + str(file))
                     Writer("challenges/" + str(file), sys.argv[1])
