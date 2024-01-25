@@ -1,4 +1,4 @@
-from Objects import Warehouse, Map, Order
+from Objects import Warehouse, Map, Order, Cluster
 from typing import Tuple
 
 
@@ -39,8 +39,8 @@ def find_closest_cluster_to_obj(Map, obj, available_clusters):
     Return the closest cluster to an object [Cluster | Warehouse]
     """
     best_cluster = (-1, -1)
-    for id_cluster, orders in available_clusters.items():
-        current_dist = Map.calc_dist(obj, orders[0][0])
+    for id_cluster, cluster in available_clusters.items():
+        current_dist = Map.calc_dist(obj, cluster.orders[0])
         if current_dist <= best_cluster[1] or best_cluster[1] == -1:
             best_cluster = (id_cluster, current_dist)
 
@@ -150,7 +150,8 @@ def sort_objects_by_distance_from_obj(
         calc_dist = Map.calc_dist(obj, current_obj)
         sorted_list.append((calc_dist, current_obj))
 
-    sorted_list = sorted(sorted_list, key=lambda x: x[0])
+    # obj[0] corresponding to dist
+    sorted_list = sorted(sorted_list, key=lambda obj: obj[0])
     sorted_list = [curr_obj[1] for curr_obj in sorted_list]
 
     if ideal_cluster_size > 1:
@@ -172,6 +173,52 @@ def calc_total_weight_order(Map, Order) -> int:
     return total
 
 
+def create_clusters(Map, orders, weightcoeff, distcoeff, ideal_cluster_size):
+    """
+    We create all the clusters for a Map
+    """
+    clustered_orders = []
+    clusters = {}
+
+    for current_order in orders:
+        # if order not clustered
+        if current_order not in clustered_orders:
+
+            # We create a new cluster
+            cluster_id = len(clusters)
+            clusters[cluster_id] = Cluster(cluster_id, weightcoeff, distcoeff)
+            clusters[cluster_id].append_orders(current_order)
+            # by default the order is set in the cluster
+
+            # We add the order to the clustered orders
+            clustered_orders.append(current_order)
+
+            # We fetch the available orders
+            available_orders = [
+                order for order in orders if order not in clustered_orders]
+            # if there is not enough orders to make a cluster
+            if (len(available_orders) < ideal_cluster_size):
+                # We add all the remaining orders to the
+                # current cluster without restrictions
+                clusters[cluster_id].append_orders(available_orders)
+                clustered_orders.extend(available_orders)
+
+            # We make clusters with ideal size using the nearest orders
+            else:
+                # we fetch the nearest orders
+                nearest_orders = sort_objects_by_distance_from_obj(
+                    Map,
+                    current_order,
+                    available_orders,
+                    ideal_cluster_size
+                )
+                # We add the nearest orders to the cluster
+                clusters[cluster_id].append_orders(nearest_orders)
+                clustered_orders.extend(nearest_orders)
+
+    return clusters
+
+
 def sort_clusters_by_distance_from_cluster(
         Map,
         cluster,
@@ -183,7 +230,8 @@ def sort_clusters_by_distance_from_cluster(
     sorted_list = []
 
     for id_cluster, current_cluster in clusters_to_sort.items():
-        calc_dist = Map.calc_dist(cluster[0][0], current_cluster[0][0])
+        calc_dist = Map.calc_dist(cluster,
+                                  current_cluster)
         sorted_list.append((calc_dist, id_cluster))
 
     sorted_list = sorted(sorted_list, key=lambda x: x[0])
@@ -206,8 +254,44 @@ def sort_orders_by_weight(orders) -> list[Order]:
     return sorted_orders
 
 
+def rank_orders_by_weight(Map, orders):
+    """
+    Rank orders by weight
+    """
+    # We calculate the total weight of each order
+    for order in orders:
+        weight_order = calc_total_weight_order(Map, order)
+        order.total_weight = weight_order
+
+    # We sort the orders by weight
+    orders = sort_orders_by_weight(orders)
+
+    # We calculate the ranking weight for each order (by position in the list)
+    for weight_ind, order in enumerate(orders):
+        order.weight_ranking = (len(orders) - weight_ind) / len(orders)
+
+    return orders
+
+
+def update_ranking_score_clusters(Map, tmp_cluster, clusters):
+    """
+    We update the distance ranking to update the overall ranking score_ranking
+    of every single cluster.
+    """
+    # Ranking by distance from the cluster
+    calc_clusters_by_dist = sort_clusters_by_distance_from_cluster(
+        Map, tmp_cluster, clusters)
+
+    # Updating the ranking
+    for ind_dist, id_cluster in enumerate(calc_clusters_by_dist):
+        cluster = clusters[id_cluster]
+        cluster.calc_dist_ranking(ind_dist, len(clusters))
+
+    return clusters
+
+
 def find_best_cluster(clusters):
     """
     Find the best cluster by ranking
     """
-    return max(clusters.items(), key=lambda x: x[1][3])[0]
+    return max(clusters.values(), key=lambda c: c.score_ranking).cluster_id

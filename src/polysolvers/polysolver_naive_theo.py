@@ -1,17 +1,15 @@
 from polyparser import parse_challenge
 from utils.functs import (
-    sort_objects_by_distance_from_obj,
+    rank_orders_by_weight,
+    create_clusters,
     find_closest_warehouse,
     max_qty_allowed_to_load,
     makeCommand,
-    calc_total_weight_order,
-    sort_orders_by_weight,
-    sort_clusters_by_distance_from_cluster,
+    update_ranking_score_clusters,
     find_best_cluster,
     find_closest_cluster_to_obj,
 )
 
-import copy
 from typing import List
 
 
@@ -35,78 +33,18 @@ def naive_approach_theo(challenge: str) -> List[str]:
 
     weightcoeff = 0.9  # The importance of weight in the ranking
     distcoeff = 0.1  # The importance of distance in the ranking
-    ideal_cluster_size = 2  # 2 is the best for now
+    IDEAL_CLUSTER_SIZE = 2  # 2 is the best for now
 
     orders = challenge.orders
 
-    clustered_orders = []
-    clusters = {}
-
-    # We calculate the total weight of each order
-    for order in orders:
-        weight_order = calc_total_weight_order(challenge, order)
-        order.total_weight = weight_order
-
-    # We sort the orders by weight
-    orders = sort_orders_by_weight(orders)
-
-    # We calculate the ranking weight for each order (by position in the list)
-    for weight_ind, order in enumerate(orders):
-        order.ranking_weight = (len(orders) - weight_ind) / len(orders)
+    # Ranking orders by weight
+    orders = rank_orders_by_weight(challenge, orders)
 
     # Creating clusters
-    for current_order in orders:
-        # if order not clustered
-        if current_order not in clustered_orders:
-
-            # We create a new cluster
-            num_cluster = len(clusters)
-            clusters[num_cluster] = [
-                [current_order], current_order.ranking_weight, 0, 0]
-            # by default the order is set in the cluster
-            # clusters[num_cluster][0] = orders in the cluster
-            # clusters[num_cluster][1] = ranking weight
-            # clusters[num_cluster][2] = dist ranking
-            # clusters[num_cluster][3] ranking score
-
-            # We add the order to the clustered orders
-            clustered_orders.append(current_order)
-
-            # We fetch the available orders
-            available_orders = [
-                order for order in orders if order not in clustered_orders]
-
-            # if there is not enough orders to make a cluster
-            if (len(available_orders) < ideal_cluster_size):
-                # We add all the remaining orders to the
-                # current cluster without restrictions
-
-                for remaining_order in available_orders:
-                    clusters[num_cluster][0].append(remaining_order)
-                    clusters[num_cluster][1] += remaining_order.ranking_weight
-                    clustered_orders.append(remaining_order)
-
-            # We make clusters with ideal size using the nearest orders
-            else:
-                # we fetch the nearest orders
-                nearest_orders = sort_objects_by_distance_from_obj(
-                    challenge,
-                    current_order,
-                    available_orders,
-                    ideal_cluster_size
-                )
-                # We add the nearest orders to the cluster
-                clusters[num_cluster][0].extend(nearest_orders)
-
-                for order in nearest_orders:
-                    clusters[num_cluster][1] += order.ranking_weight
-                clustered_orders.extend(nearest_orders)
-
-            # We calculate the average ranking weight for the cluster
-            clusters[num_cluster][1] /= len(clusters[num_cluster][0])
+    clusters = create_clusters(challenge, orders, weightcoeff, distcoeff,
+                               IDEAL_CLUSTER_SIZE)
 
     # Completing orders for each cluster
-
     # The first cluster chosen is the one with the highest ranking score
     cluster_id = find_closest_cluster_to_obj(
         challenge, challenge.warehouses[0], clusters)
@@ -127,24 +65,19 @@ def naive_approach_theo(challenge: str) -> List[str]:
         # We create a copy of the cluster
         # that we are going to use to calculate
         # the next cluster
-        tmp_cluster = copy.deepcopy(cluster)
+        tmp_cluster = cluster.copy_cluster()
 
         # While there is orders to complete in the cluster
-        while len(cluster[0]) != 0:
+        while not cluster.are_orders_full_filled():
             # We fetch the first order of the cluster
-            order = cluster[0][0]
-
+            order = cluster.get_first_order()
             # While the order is not completed
             while not order.check_full_filled():
                 # The idea is to load fully the drone each time
                 # to try to optimize the number of turns used
 
-                # We reset the drone stock
-                drone.reset_stock(len(order.products_qty))
-
                 # We iterate through the products of the order
-                for product_type in range(len(order.products_qty)):
-                    qty_order = order.products_qty[product_type]
+                for product_type, qty_order in enumerate(order.products_qty):
 
                     if qty_order > 0:  # If we need the product
                         # We look at how much we can load with the drone
@@ -197,9 +130,10 @@ def naive_approach_theo(challenge: str) -> List[str]:
                             qty_prod
                         )
                         order.products_qty[product_type] -= qty_prod
+                        drone.stock[product_type] -= qty_prod
 
             # We remove the order from the cluster
-            cluster[0].pop(0)
+            cluster.del_order_full_filled(order)
             # The next order will be the first of the cluster
 
         # Once we are done with the cluster
@@ -207,16 +141,9 @@ def naive_approach_theo(challenge: str) -> List[str]:
         # and we choose the best cluster to go to
         del clusters[cluster_id]
         if len(clusters) - 1 >= 0:
-            # Ranking by distance from the cluster
-            calc_clusters_by_dist = sort_clusters_by_distance_from_cluster(
+            # Updating the ranking score for all clusters (distance changes)
+            clusters = update_ranking_score_clusters(
                 challenge, tmp_cluster, clusters)
-
-            # Updating the ranking
-            for ind_dist, id_cluster in enumerate(calc_clusters_by_dist):
-                cluster = clusters[id_cluster]
-                cluster[2] = (len(clusters) - ind_dist) / len(clusters)
-                cluster[3] = weightcoeff * \
-                    cluster[1] + distcoeff * cluster[2]
 
             # We choose the best cluster according to the ranking
             cluster_id = find_best_cluster(clusters)
