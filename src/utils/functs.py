@@ -3,10 +3,10 @@ from typing import Tuple
 
 
 def find_closest_warehouse(
-    challenge: Map,
-    drone_index: int,
-    item_type: int,
-    qty: int
+        challenge: Map,
+        drone_index: int,
+        item_type: int,
+        qty: int
 ) -> Tuple[Warehouse, int]:
     """
     Return the closest warehouse and the maximum
@@ -75,9 +75,9 @@ def current_payload_drone(challenge: Map, drone: Drone) -> int:
 
 
 def max_qty_allowed_to_load(
-    challenge: Map,
-    drone: Drone,
-    product_type: int
+        challenge: Map,
+        drone: Drone,
+        product_type: int
 ) -> int:
     """
     Return max qty that a drone can take for a
@@ -92,18 +92,18 @@ def max_qty_allowed_to_load(
 
 
 def makeCommand(
-    action: str,
-    Solution: list,
-    drone_id: int,
-    dest_id: int,
-    product_type: int,
-    qty: int,
+        action: str,
+        solution: list,
+        drone_id: int,
+        dest_id: int,
+        product_type: int,
+        qty: int,
 ) -> None:
     """
     Take an action either "L" or "D" and write a
     string to append into the list solution
     """
-    Solution.append(
+    solution.append(
         str(drone_id)
         + " "
         + str(action)
@@ -117,9 +117,9 @@ def makeCommand(
 
 
 def makeCommands(
-    solution: list,
-    queue_load: list,
-    queue_deliver: list
+        solution: list,
+        queue_load: list,
+        queue_deliver: list
 ):
     # This method is called when we need to unqueue
     # so we write all load actions first then
@@ -148,10 +148,10 @@ def makeCommands(
 
 
 def sort_objects_by_distance_from_obj(
-    challenge: Map,
-    obj,
-    objects_list_to_sort: list,
-    ideal_cluster_size=1,
+        challenge: Map,
+        obj,
+        objects_list_to_sort: list,
+        ideal_cluster_size=1,
 ):
     """
     Take a challenge, an object and a list of other objects.
@@ -188,11 +188,11 @@ def calc_total_weight_order(challenge: Map, order: Order) -> int:
 
 
 def create_clusters(
-    challenge: Map,
-    orders: list,
-    weightcoeff: float,
-    distcoeff: float,
-    ideal_cluster_size: int
+        challenge: Map,
+        orders: list,
+        weightcoeff: float,
+        distcoeff: float,
+        ideal_cluster_size: int
 ):
     """
     We create all the clusters for a Map
@@ -240,9 +240,9 @@ def create_clusters(
 
 
 def sort_clusters_by_distance_from_cluster(
-    challenge: Map,
-    cluster: Cluster,
-    clusters_to_sort: list[Cluster],
+        challenge: Map,
+        cluster: Cluster,
+        clusters_to_sort: list[Cluster],
 ) -> list[Cluster]:
     """
     Take a challenge, a cluster and a list of other clusters.
@@ -297,9 +297,9 @@ def rank_orders_by_weight(challenge: Map, orders: list[Order]) -> list[Order]:
 
 
 def update_ranking_score_clusters(
-    challenge: Map,
-    tmp_cluster: Cluster,
-    clusters: Cluster
+        challenge: Map,
+        tmp_cluster: Cluster,
+        clusters: Cluster
 ) -> list[Cluster]:
     """
     We update the distance ranking to update the overall ranking score_ranking
@@ -322,3 +322,32 @@ def find_best_cluster(clusters: list[Cluster]) -> int:
     Find the best cluster by ranking
     """
     return max(clusters.values(), key=lambda c: c.score_ranking).cluster_id
+
+
+# We empty the drones and add commands to the solution
+def deliver_drone_and_emptying(gameM: Map,
+                               commendL: list[tuple[int, int, int, int]],
+                               commendD: list[tuple[int, int, int, int]],
+                               solution: list):
+    # set of drones to remove from the order
+    for o in gameM.orders:
+        for d in o.drones:
+            for prodT, prodQTY in enumerate(d.stock):
+                # if there is still product of this type in the drone
+                if prodQTY > 0:
+                    # We add the delivery command to the delivery list
+                    commendD.append((d.index, o.index, prodT, prodQTY))
+                    # the product is removed from the order
+                    o.products_qty[prodT] -= prodQTY
+                    # the product is removed from the drone
+                    d.stock[prodT] -= prodQTY
+                    d.totalLoad -= gameM.product_weights[prodT] * prodQTY
+            # we remove the drones from the order
+            o.drones.remove(d)
+    # we add the commands to the solution
+    for c in commendL:
+        makeCommand("L", solution, *c)
+    commendL.clear()
+    for c in commendD:
+        makeCommand("D", solution, *c)
+    commendD.clear()

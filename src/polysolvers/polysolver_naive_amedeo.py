@@ -1,130 +1,92 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-from Objects import Order, Map
-from polyparser import parse_challenge
-
 """
 Module de résolution du projet Poly#.
 """
-
-
-class Destination:
-    def __init__(self, position: tuple[int, int], game_map: Map):
-        self.position: tuple[int, int] = position
-        self.order_by_type: list[list[Order]] = \
-            [[] for _ in range(len(game_map.product_weights))]
-        self.sum_qty_type: list[int] = \
-            [0 for _ in range(len(game_map.product_weights))]
-        # Tri des distances entre la destination et toutes les warehouses
-        self.index_nearby_warehouse = []
-        for index_w, warehouse in enumerate(game_map.warehouses):
-            self.index_nearby_warehouse.append(
-                (Map.calc_dist(warehouse, self), warehouse))
-        self.index_nearby_warehouse.sort(key=lambda x: x[0])
-        self.index_nearby_warehouse = \
-            [i[1] for i in self.index_nearby_warehouse]
-
-    def add(self, order: Order):
-        for product, qty in enumerate(order.products_qty):
-            if order.products_qty[qty] > 0:
-                self.order_by_type[product].append(order)
-                self.sum_qty_type[product] += order.products_qty[product]
-        return self
+from Objects import Map
+from polyparser import parse_challenge
+from utils.functs import (
+    sort_objects_by_distance_from_obj,
+    makeCommand,
+    deliver_drone_and_emptying)
 
 
 def naive_approach_amedeo(challenge):
     """
-    Naive approach that use every drones one by one
-    and cycle through each orders
-    one by one and each product_type one by one.
+    Naive algorithm where we iterate over the orders,
+    sorted by weight to start with the fastest to finish.
+    The nearest Warehouses are calculated. Each product type is iterated over.
+    Then the current drone is filled, and if it's full, the next one is taken.
+    Once all the drones are full, we empty them.
     """
-
     solution = []
     gameM: Map = parse_challenge(challenge)
 
-    warehouseDroneDist: list[dict[int, int]] = [{i: (Map.calc_dist(
-        gameM.drones[i], gameM.warehouses[x])) for i in range(gameM.nb_drones)}
-        for x in range(len(gameM.warehouses))]
+    # We sort the orders by weight
+    oWeightSort = sorted(gameM.orders, key=lambda x: sum(x.products_qty))
 
-    # resemble les orders qui ont la meme destination
-    order_trier_par_destination = {}
-    for order in gameM.orders:
-        if order.position not in order_trier_par_destination.keys():
-            order_trier_par_destination[order.position] = Destination(
-                order.position, gameM)
-        order_trier_par_destination[order.position].add(order)
+    # Index of the current drone
+    dPointer = 0
+    # Current drone
+    dCurent = gameM.drones[dPointer]
 
-    # pour une meme destination
-    for destination in order_trier_par_destination.values():
+    # we sort the warehouses by distance from the first warehouse
+    wDistSort = sort_objects_by_distance_from_obj(
+        gameM, gameM.warehouses[0], gameM.warehouses)
 
-        # pour chaque type de produit
-        for prodT, product_qty in enumerate(destination.sum_qty_type):
-            # preselection des warehouse avec le produit
-            # (on a deja trier par proximity)
-            warehouseWithP = []
-            for warehouse in destination.index_nearby_warehouse:
-                if warehouse.stock[prodT] > 0:
-                    product_qty -= warehouse.stock[prodT]
-                    warehouseWithP.append(warehouse)
-                if product_qty <= 0:
-                    break
+    # list of load commands
+    commendL: list[tuple[int, int, int, int]] = []
+    # list of deliver commands
+    commendD: list[tuple[int, int, int, int]] = []
 
-            # pour chaque order
-            for ordC in destination.order_by_type[prodT]:
-                # tant que pas finit
-                while ordC.products_qty[prodT] > 0:
-                    warehouse = warehouseWithP[0]
+    # For each order of the sorted order list
+    for oIndex, oCurent in enumerate(oWeightSort):
+        # Index of the current warehouse
+        wPointer = 0
+        # current warehouse
+        wCurent = wDistSort[wPointer]
+        # for each product type in the order
+        for prodT, _ in enumerate(oCurent.products_qty):
+            # While there is still products to send
+            while oCurent.products_qty[prodT] > 0:
+                # If there is no more of this product in the warehouse
+                if wCurent.stock[prodT] <= 0:
+                    # We go to the next warehouse
+                    wPointer = (wPointer + 1) % len(wDistSort)
+                    wCurent = wDistSort[wPointer]
+                    continue
 
-                    # meilleur distance entre tous les drones et les warehouse
-                    droneCI = min(
-                        warehouseDroneDist[warehouse.index].items(),
-                        key=lambda t: t[1])
+                # Calcul the quantity of product to send
+                qtyL = min(
+                    gameM.max_payload // gameM.product_weights[prodT],
+                    wCurent.stock[prodT],
+                    oCurent.products_qty[prodT])
 
-                    droneCI = droneCI[0]
+                # if the drone is full if we add more of this product
+                while dCurent.totalLoad + \
+                        (gameM.product_weights[prodT] * qtyL) \
+                        > gameM.max_payload:
+                    # if all drones are full
+                    if (dPointer + 1) % gameM.nb_drones == 0:
+                        # We empty the drones and add write
+                        # the commands to the solution
+                        (deliver_drone_and_emptying
+                         (gameM, commendL, commendD, solution))
+                    # We go to the next drone
+                    dPointer = (dPointer + 1) % gameM.nb_drones
+                    dCurent = gameM.drones[dPointer]
 
-                    # le chargement est limité par le payload,
-                    # les stock de la warehouse
-                    # et le nombre element restant à expedier
-                    qtyL = min(
-                        gameM.max_payload // gameM.product_weights[prodT],
-                        gameM.warehouses[warehouse.index].stock[prodT],
-                        ordC.products_qty[prodT])
+                # add the load command to the load list
+                commendL.append((dCurent.index, wCurent.index, prodT, qtyL))
 
-                    solution.append(
-                        str(droneCI)
-                        + " L "
-                        + str(warehouse.index)
-                        + " "
-                        + str(prodT)
-                        + " "
-                        + str(qtyL)
-                    )
-                    # On remove 1 objet de la warehouse
-                    gameM.warehouses[warehouse.index].stock[prodT] -= qtyL
+                # The object is removed from the warehouse
+                wCurent.stock[prodT] -= qtyL
 
-                    if warehouse.stock[prodT] <= 0:
-                        del warehouseWithP[0]
+                # The object is added to the drone
+                dCurent.stock[prodT] += qtyL
+                dCurent.totalLoad += gameM.product_weights[prodT] * qtyL
 
-                    solution.append(
-                        str(droneCI)
-                        + " D "
-                        + str(ordC.index)
-                        + " "
-                        + str(prodT)
-                        + " "
-                        + str(qtyL)
-                    )
-                    gameM.drones[droneCI].position = ordC.position
-
-                    # on met à jour la matrice
-                    for i, v in enumerate(gameM.warehouses):
-                        warehouseDroneDist[i][droneCI] = (
-                            Map.calc_dist(gameM.drones[droneCI], v))
-
-                    # On remove 1 objet de order
-                    ordC.products_qty[prodT] -= qtyL
-
+                # The drone is added to the order if is not already in
+                if dCurent not in oCurent.drones:
+                    oCurent.drones.append(dCurent)
+                oCurent.products_qty[prodT] -= qtyL
+    deliver_drone_and_emptying(gameM, commendL, commendD, solution)
     return solution
-
-
-naive_approach_amedeo("challenges/a_example.in")

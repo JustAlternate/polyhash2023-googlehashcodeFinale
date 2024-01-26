@@ -68,11 +68,11 @@ def naive_approach_loic(fichier_challenge: str) -> list:
                 # Add to the queue the new actions to write for this drone.
                 queue_load.append(
                     [current_drone_index, found_warehouse.index,
-                        product_type, qty_found]
+                     product_type, qty_found]
                 )
                 queue_deliver.append(
                     [current_drone_index, current_order.index,
-                        product_type, qty_found]
+                     product_type, qty_found]
                 )
 
                 current_drone.position = current_order.position
@@ -83,8 +83,8 @@ def naive_approach_loic(fichier_challenge: str) -> list:
 
                 # Change drone if one single drone cant
                 # finish this product type quantity.
-                current_drone_index = (
-                    current_drone_index + 1) % (len(challenge.drones))
+                current_drone_index = (current_drone_index + 1) % \
+                                      (len(challenge.drones))
 
     # In case there is remaining actions to make in the queues.
     makeCommands(solution, queue_load, queue_deliver)

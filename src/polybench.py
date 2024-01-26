@@ -22,7 +22,6 @@ def bench(file: str, method: str):
 
 
 def bench_all(method: str = None, challenge: str = None):
-
     challenge_to_bench = [
         "challenges/a_example.in",
         "challenges/b_busy_day.in",
