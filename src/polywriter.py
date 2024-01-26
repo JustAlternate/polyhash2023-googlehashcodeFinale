@@ -1,8 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from polysolvers import (naive_approach_loic,
-                         naive_approach_theo,
-                         naive_approach_amedeo)
+from polysolvers import (
+    naive_approach_loic,
+    naive_approach_theo,
+    naive_approach_amedeo,
+)
 import sys
 
 
@@ -17,7 +17,7 @@ def Writer(challenge: str, method: str, output_name: str = None) -> None:
         print("This algorithm doesn't exist")
         return
 
-    # basename if no output_name specified the
+    # basename if no output_name specified take the
     # challenge name and add .out at the end.
     if output_name is None:
         output_name = (

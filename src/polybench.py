@@ -2,9 +2,15 @@ from polywriter import Writer
 import resource
 import sys
 import time
+import os
+
+"""
+This module makes reports of our algorithms
+performance both in time spent and memory used
+"""
 
 
-def time_writer(file: str, method: str):
+def bench(file: str, method: str):
     t1 = time.perf_counter()
     d1 = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     Writer(str(file), str(method))
@@ -15,7 +21,7 @@ def time_writer(file: str, method: str):
     print(" " * (43) + str((d2 - d1) / 1000) + " MB")
 
 
-def bench(method: str = None, challenge: str = None):
+def bench_all(method: str = None, challenge: str = None):
 
     challenge_to_bench = [
         "challenges/a_example.in",
@@ -30,36 +36,39 @@ def bench(method: str = None, challenge: str = None):
         "amedeo",
     ]
 
-    if method is None and challenge is None:
+    if method == "every" or method is None:
         for algo in algos_to_bench:
             print("===========")
             print("Using " + str(algo) + " algorithm...")
+            if challenge == "every":
+                for file in os.listdir("challenges/"):
+                    bench("challenges/" + file, algo)
+            elif challenge is None:
+                for file in challenge_to_bench:
+                    bench(file, algo)
+            else:
+                bench(challenge, algo)
+        print("===========")
+    else:
+        print("===========")
+        print("Using " + str(method) + " algorithm...")
+        if challenge == "every":
+            for file in os.listdir("challenges/"):
+                bench("challenges/" + file, method)
+        elif challenge is None:
             for file in challenge_to_bench:
-                time_writer(file, algo)
-        print("===========")
-
-    if method is not None and challenge is None:
-        print("===========")
-        print("Using " + str(method) + " algorithm...")
-        for file in challenge_to_bench:
-            time_writer(file, method)
-        print("===========")
-
-    elif method is not None and challenge is not None:
-        print("===========")
-        print("Using " + str(method) + " algorithm...")
-        time_writer(challenge, method)
-        print("===========")
+                bench(file, method)
+        else:
+            bench(challenge, method)
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(
-            "usage: python polybench.py [theo|loic|amedeo] [challenges/map.in]"
+            "usage: python polybench.py\
+            every|theo|loic|amedeo [every|challenges/map.in]"
         )
-    if len(sys.argv) == 2:
-        bench(sys.argv[1])
+    elif len(sys.argv) == 2:
+        bench_all(sys.argv[1], None)
     elif len(sys.argv) >= 3:
-        bench(sys.argv[1], sys.argv[2])
-    else:
-        bench()
+        bench_all(sys.argv[1], sys.argv[2])
