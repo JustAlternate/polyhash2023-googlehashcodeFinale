@@ -298,7 +298,7 @@ Quelques chiffres concernant notre projet :
 - **54** tickets
 - **41** merge requests
 - **+40** branches
-- **~ 1570** lignes de code
+- ~ **1570** lignes de code
 - **178** pipelines (sucess rate : 75%)
 - **43** failed pipelines
 - **318** jobs de CI  
