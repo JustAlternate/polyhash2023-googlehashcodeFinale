@@ -1,6 +1,7 @@
-from polywriter import Writer
-import sys
 import os
+import sys
+
+from polywriter import Writer
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -18,4 +19,5 @@ if __name__ == "__main__":
                 Writer(sys.argv[2], sys.argv[1])
             else:
                 for file in os.listdir("challenges/"):
+                    print("Generating solution for " + str(file) + "...")
                     Writer("challenges/" + str(file), sys.argv[1])

@@ -14,17 +14,23 @@ drones = avion cuphead ?
 warehouses = shops ?
 orders = maisons ?
 
-1. Introduction dans laquelle on voit nos personnages et dans laquelle le spectateur comprend qui est qui. (nos noms au dessus de nos personnages) afin que dans la suite de la vidéo, on est plus besoin d'écrire nos noms. Avec la petit music d'ambiance de cuphead du début.
+1. Introduction dans laquelle on voit nos personnages et dans laquelle le spectateur comprend qui est qui. (nos noms au
+   dessus de nos personnages) afin que dans la suite de la vidéo, on est plus besoin d'écrire nos noms. Avec la petit
+   music d'ambiance de cuphead du début.
 
-2. On présente le problème dans sa globalité (drones, warehouses et orders) on personifie le problème par le grand méchant de cuphead (le diable)
+2. On présente le problème dans sa globalité (drones, warehouses et orders) on personifie le problème par le grand
+   méchant de cuphead (le diable)
 
-3. Première approche loic (idée était réussir a générer une solution qui marche pour a_example (boss n°1)) explication stratégie naive loic.
+3. Première approche loic (idée était réussir a générer une solution qui marche pour a_example (boss n°1)) explication
+   stratégie naive loic.
 
-4. Deuxieme approche amedeo (idée de trouver une approche non naive qui permet de scorer des points sur b_busy_day (boss n°2)) explication stratégie amedeo
+4. Deuxieme approche amedeo (idée de trouver une approche non naive qui permet de scorer des points sur b_busy_day (boss
+   n°2)) explication stratégie amedeo
 
-5. Troisieme approche theo (idée approche générale non naive qui fait des points sur toutes les maps (boss n°2 , boss n°3 (c_redundancy) et boss n°4 (d_mother_of_all_warehouse) explication de la stratégie
+5. Troisieme approche theo (idée approche générale non naive qui fait des points sur toutes les maps (boss n°2 , boss
+   n°3 (c_redundancy) et boss n°4 (d_mother_of_all_warehouse) explication de la stratégie
 
-6. Trouver une façon de personnifier la CI et les tests. (personnages gentils de cuphead ?) 
+6. Trouver une façon de personnifier la CI et les tests. (personnages gentils de cuphead ?)
 
 7. Une diapo par boss pour montrer le nombre de points obtenus sur chaque boss avec la solution theo.
 

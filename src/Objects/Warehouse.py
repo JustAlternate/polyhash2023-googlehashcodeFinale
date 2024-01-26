@@ -3,10 +3,10 @@ from Objects.Order import Order
 
 class Warehouse:
     def __init__(
-        self,
-        index: int,
-        position: tuple[int, int],
-        stock: list[int]
+            self,
+            index: int,
+            position: tuple[int, int],
+            stock: list[int]
     ):
         self.index = index  # Represents the index of the warehouse
         self.position: tuple[int, int] = position

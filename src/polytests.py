@@ -19,7 +19,8 @@ from utils.functs import (
     sort_orders_by_weight,
     rank_orders_by_weight,
     update_ranking_score_clusters,
-    find_best_cluster
+    find_best_cluster,
+    deliver_drone_and_emptying
 )
 
 
@@ -315,6 +316,19 @@ def test_find_best_cluster():
 
     printg("test_find_best_cluster tests PASSED")
 
+    def test_deliver_drone_and_emptying():
+        m = parse_challenge("challenges/a_example.in")
+        commendL = ["0 L 0 0 1"]
+        commendD = ["0 D 1 0 1"]
+        solution = []
+        deliver_drone_and_emptying(m, commendL, commendD, solution)
+        assert m.warehouses[0].stock == [4, 1, 0]
+        assert m.drones[0].stock == [1, 0, 0]
+        assert m.orders[0].products_qty == [0, 0, 1]
+        assert solution == ["0 L 0 0 1", "0 D 1 0 1"]
+
+        printg("test_deliver_drone_and_emptying tests PASSED")
+
 
 def test_naive_loic():
     solution = naive_approach_loic("challenges/a_example.in")
@@ -361,12 +375,12 @@ def test_naive_amedeo():
         [
             "0 L 0 0 1",
             "1 L 1 2 1",
-            "0 D 0 0 1",
-            "1 D 0 2 1",
             "2 L 0 0 1",
-            "2 D 1 0 1",
+            "2 D 0 0 1",
+            "0 D 1 0 1",
+            "1 D 2 2 1",
             "0 L 1 2 1",
-            "0 D 2 2 1",
+            "0 D 0 2 1"
         ]
     )
 
@@ -374,7 +388,7 @@ def test_naive_amedeo():
 
 
 def test_writer():
-    # Testing if writer hasnt changed, if it have, you may want to update the
+    # Testing if writer hasn't changed, if it has, you may want to update the
     # solutions stored in solutions_test to pass this test
     Writer("challenges/a_example.in", "loic")
     assert set(open("solutions/solutions_loic/a_example.out")) == set(
@@ -415,7 +429,6 @@ def test_writer():
 
 
 if __name__ == "__main__":
-
     print('\nTesting parsing...')
     test_parse_challenge()
 
@@ -440,12 +453,13 @@ if __name__ == "__main__":
     test_rank_orders_by_weight()
     test_update_ranking_score_clusters()
     test_find_best_cluster()
+
     printg('-> utils.functs tests COMPLETED')
 
     print('\nTesting solutions for each approach')
     test_naive_loic()
     test_naive_theo()
-    # test_naive_amedeo() car je vais repartir sur des base propre
+    test_naive_amedeo()
 
     print('\nTesting Writer...')
     test_writer()

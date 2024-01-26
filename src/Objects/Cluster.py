@@ -7,10 +7,10 @@ class Cluster:
     # We define a class for our cluster based algorithm
     # The idea is the group orders by proximity and make clusters or orders.
     def __init__(
-        self,
-        cluster_id: int,
-        weight_coeff: float,
-        dist_coeff: float
+            self,
+            cluster_id: int,
+            weight_coeff: float,
+            dist_coeff: float
     ):
 
         self.cluster_id = cluster_id
@@ -63,8 +63,8 @@ class Cluster:
         Calc the score of the cluster using its weight rank,
         dist rank and the differents coeffs
         """
-        self.score_ranking = self.weight_ranking * \
-            self.weight_coeff + self.dist_ranking * self.dist_coeff
+        self.score_ranking = self.weight_ranking * self.weight_coeff + \
+            self.dist_ranking * self.dist_coeff
 
     def calc_dist_ranking(self, dist_pos: list[int, int], nb_clusters: int):
         self.dist_ranking = (nb_clusters - dist_pos) / nb_clusters
