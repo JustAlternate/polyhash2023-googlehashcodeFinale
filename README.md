@@ -297,6 +297,7 @@ Explication implémentation des algorithmes :
 Quelques chiffres concernant notre projet :
 - **54** tickets
 - **41** merge requests
+- **+40 branches**
 - **178** pipelines (sucess rate : 75%)
 - **43** failed pipelines
 - **318** jobs de CI  
