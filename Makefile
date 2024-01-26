@@ -32,6 +32,10 @@ ifeq (bench,$(firstword $(MAKECMDGOALS)))
   BENCH_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(BENCH_ARGS):;@:)
 endif
+ifeq (score,$(firstword $(MAKECMDGOALS)))
+  BENCH_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(BENCH_ARGS):;@:)
+endif
 
 venv/bin/activate: requirements.txt
 	@echo "================="
@@ -85,6 +89,13 @@ bench: install
 	@echo "Success"
 	@echo "================="
 
+score: install
+	@echo "================="
+	@echo "Launching scores calcs..."
+	$(Source) && python src/polyscoring.py $(BENCH_ARGS)
+	@echo "Success"
+	@echo "================="
+
 all: install lint tests
 
 clean:
@@ -93,9 +104,9 @@ clean:
 	rm -rf src/__pycache__
 	rm -rf venv
 	rm -f solutions/*.out
-	rm -f solutions_theo/*.out
-	rm -f solutions_loic/*.out
-	rm -f solutions_amedeo/*.out
+	rm -f solutions/solutions_theo/*.out
+	rm -f solutions/solutions_loic/*.out
+	rm -f solutions/solutions_amedeo/*.out
 	@echo "Success"
 
 

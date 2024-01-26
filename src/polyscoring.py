@@ -1,7 +1,10 @@
 from math import ceil
-
+import time
 from Objects.Map import Map
+from polywriter import Writer
 from polyparser import parse_challenge
+import sys
+import os
 
 
 def parse_solution_challenge(filenameIn: str, filenameOut: str):
@@ -10,7 +13,6 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
 
     challenge: Map = parse_challenge(filenameIn)
     total = 1
-    print(total)
     with open(filenameOut, "r") as f:
         # Read infos map
         nb_commands = int(f.readline())
@@ -25,15 +27,12 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
             commands[int(drone_id)].append((str(action), int(dest_id),
                                             int(product_type), int(qty)))
 
-    # solution = naive_approach_theo(filenameOut)
-
-    # for ligne in commands:
-        # int(drone_id), a = [v for ligne.split(" ")
         for drone_id, drone_action in commands.items():
             turn = 0
             for action in drone_action:
-                if turn > challenge.nb_turns:
-                    return
+                # if turn > challenge.nb_turns:
+                #     print(str(filenameIn) + " : " + str(total))
+                #     return
                 if action[0] == "L":
                     turn += challenge.calc_dist(
                         challenge.drones[drone_id],
@@ -61,8 +60,50 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
                             challenge.nb_turns - turn) / challenge.nb_turns
                         ) * 100)
                 turn += 1
-    print(total)
+    print(str(filenameIn) + " : " + str(total))
 
 
-parse_solution_challenge("challenges/b_busy_day.in",
-                         "solutions/solutions_theo/b_busy_day.out")
+def score_all(method: str = None, challenge: str = None):
+    challenge_to_bench = [
+        "challenges/a_example.in",
+        "challenges/b_busy_day.in",
+        "challenges/c_redudancy.in",
+        "challenges/d_mother_of_all_warehouses.in",
+    ]
+
+    algos_to_bench = [
+        "theo",
+        "loic",
+        "amedeo",
+    ]
+
+    if method == "every":
+        for algo in algos_to_bench:
+            print("===========")
+            print("Using " + str(algo) + " algorithm...")
+            for file in challenge_to_bench:
+                Writer(file, algo, "solutions/" +
+                       str(file.split("/")[-1]) + ".out")
+                parse_solution_challenge(
+                    file, "solutions/" + str(file.split("/")[-1]) + ".out"
+                )
+    else:
+        print("===========")
+        print("Using " + str(method) + " algorithm...")
+        for file in challenge_to_bench:
+            Writer(file, method, "solutions/" +
+                   str(file.split("/")[-1]) + ".out")
+            parse_solution_challenge(
+                file, "solutions/" + str(file.split("/")[-1]) + ".out"
+            )
+
+    print("===========")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print(
+            "usage: python polyscoring.py every|theo|loic|amedeo"
+        )
+    elif len(sys.argv) == 2:
+        score_all(sys.argv[1])
