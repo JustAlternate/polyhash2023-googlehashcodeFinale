@@ -64,7 +64,7 @@ class Cluster:
         dist rank and the differents coeffs
         """
         self.score_ranking = self.weight_ranking * self.weight_coeff + \
-                             self.dist_ranking * self.dist_coeff
+            self.dist_ranking * self.dist_coeff
 
     def calc_dist_ranking(self, dist_pos: list[int, int], nb_clusters: int):
         self.dist_ranking = (nb_clusters - dist_pos) / nb_clusters

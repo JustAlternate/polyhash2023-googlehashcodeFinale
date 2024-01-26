@@ -21,8 +21,8 @@ def Writer(challenge: str, method: str, output_name: str = None) -> None:
     # challenge name and add .out at the end.
     if output_name is None:
         output_name = (
-                "solutions/" + "solutions_" + str(method) + "/"
-                + str(str(challenge.split("/")[-1]).split(".")[0]) + ".out"
+            "solutions/" + "solutions_" + str(method) + "/"
+            + str(str(challenge.split("/")[-1]).split(".")[0]) + ".out"
         )
 
     with open(output_name, "w") as f:

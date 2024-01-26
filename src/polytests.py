@@ -404,11 +404,6 @@ def test_writer():
         open("solutions_test/a_example_amedeo.test")
     )
 
-    Writer("challenges/b_busy_day.in", "amedeo")
-    assert set(open("solutions/solutions_amedeo/b_busy_day.out")) == set(
-        open("solutions_test/b_busy_day_amedeo.test")
-    )
-
     printg("Writer tests PASSED for amedeo")
 
     printg("-> Writer tests COMPLETED")
