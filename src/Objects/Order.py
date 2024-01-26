@@ -15,8 +15,8 @@ class Order:
         self.products_qty: list[int] = products_qty
         self.total_weight: int = 0  # Used by naive_theo
         self.weight_ranking: float = 0.0  # Used by naive_theo
-        self.drones: set[Drone] = set()  # Used by naive_amedeo
+        self.drones: list[Drone] = []  # Used by naive_amedeo
 
     def check_full_filled(self):
-        """Return True if an order is full filled"""
+        """Return True if an order is fulfilled"""
         return self.products_qty == [0] * len(self.products_qty)

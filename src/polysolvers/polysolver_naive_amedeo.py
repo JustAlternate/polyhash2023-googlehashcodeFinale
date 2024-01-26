@@ -87,8 +87,9 @@ def naive_approach_amedeo(challenge):
                 dCurent.stock[prodT] += qtyL
                 dCurent.totalLoad += gameM.product_weights[prodT] * qtyL
 
-                # The drone is added to the order
-                oCurent.drones.add(dCurent)
+                # The drone is added to the order if is not already in
+                if dCurent not in oCurent.drones:
+                    oCurent.drones.append(dCurent)
                 oCurent.products_qty[prodT] -= qtyL
     deliver_drone_and_emptying(gameM, commendL, commendD, solution)
     return solution

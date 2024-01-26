@@ -361,12 +361,12 @@ def test_naive_amedeo():
         [
             "0 L 0 0 1",
             "1 L 1 2 1",
-            "0 D 0 0 1",
-            "1 D 0 2 1",
             "2 L 0 0 1",
-            "2 D 1 0 1",
+            "2 D 0 0 1",
+            "0 D 1 0 1",
+            "1 D 2 2 1",
             "0 L 1 2 1",
-            "0 D 2 2 1",
+            "0 D 0 2 1"
         ]
     )
 
@@ -374,7 +374,7 @@ def test_naive_amedeo():
 
 
 def test_writer():
-    # Testing if writer hasnt changed, if it have, you may want to update the
+    # Testing if writer hasn't changed, if it has, you may want to update the
     # solutions stored in solutions_test to pass this test
     Writer("challenges/a_example.in", "loic")
     assert set(open("solutions/solutions_loic/a_example.out")) == set(

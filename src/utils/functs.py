@@ -330,25 +330,20 @@ def deliver_drone_and_emptying(gameM: Map,
                                commendD: list[tuple[int, int, int, int]],
                                solution: list):
     # set of drones to remove from the order
-    remove = set()
     for o in gameM.orders:
         for d in o.drones:
-            # set to 0
-            remove.clear()
             for prodT, prodQTY in enumerate(d.stock):
                 # if there is still product of this type in the drone
                 if prodQTY > 0:
-                    # We add the deliver command to the deliver list
+                    # We add the delivery command to the delivery list
                     commendD.append((d.index, o.index, prodT, prodQTY))
                     # the product is removed from the order
                     o.products_qty[prodT] -= prodQTY
                     # the product is removed from the drone
                     d.stock[prodT] -= prodQTY
                     d.totalLoad -= gameM.product_weights[prodT] * prodQTY
-            # we add the drone to the set of drones to remove from the order
-            remove.add(d)
-        # we remove the drones from the order
-        o.drones -= remove
+            # we remove the drones from the order
+            o.drones.remove(d)
     # we add the commands to the solution
     for c in commendL:
         makeCommand("L", solution, *c)
