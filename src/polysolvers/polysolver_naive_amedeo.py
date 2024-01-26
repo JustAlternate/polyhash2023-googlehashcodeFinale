@@ -87,6 +87,8 @@ def naive_approach_amedeo(challenge):
                 # The drone is added to the order if is not already in
                 if dCurent not in oCurent.drones:
                     oCurent.drones.append(dCurent)
+
+                # the product is remove of the order
                 oCurent.products_qty[prodT] -= qtyL
     deliver_drone_and_emptying(gameM, commendL, commendD, solution)
     return solution
