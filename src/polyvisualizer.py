@@ -1,3 +1,5 @@
+import sys
+
 from polyparser import parse_challenge
 
 

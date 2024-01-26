@@ -6,14 +6,19 @@ Module de résolution du projet Poly#.
 """
 from Objects import Map
 from polyparser import parse_challenge
-from utils.functs import sort_objects_by_distance_from_obj, makeCommand, deliver_drone_and_emptying
+from utils.functs import (
+    sort_objects_by_distance_from_obj,
+    makeCommand,
+    deliver_drone_and_emptying)
 
 
 def naive_approach_amedeo(challenge):
     """
-    Naive algorithm where we iterate over the orders, sorted by weight to start with the fastest to finish. The
-    nearest Warehouses are calculated. Each product type is iterated over. Then the current drone is filled,
-    and if it's full, the next one is taken. Once all the drones are full, we empty them.
+    Naive algorithm where we iterate over the orders,
+    sorted by weight to start with the fastest to finish.
+    The nearest Warehouses are calculated. Each product type is iterated over.
+    Then the current drone is filled, and if it's full, the next one is taken.
+    Once all the drones are full, we empty them.
     """
     solution = []
     gameM: Map = parse_challenge(challenge)
@@ -59,11 +64,15 @@ def naive_approach_amedeo(challenge):
                     oCurent.products_qty[prodT])
 
                 # if the drone is full if we add more of this product
-                while dCurent.totalLoad + (gameM.product_weights[prodT] * qtyL) > gameM.max_payload:
+                while dCurent.totalLoad + \
+                        (gameM.product_weights[prodT] * qtyL) \
+                        > gameM.max_payload:
                     # if all drones are full
                     if (dPointer + 1) % gameM.nb_drones == 0:
-                        # We empty the drones and add write the commands to the solution
-                        deliver_drone_and_emptying(gameM, commendL, commendD, solution)
+                        # We empty the drones and add write
+                        # the commands to the solution
+                        (deliver_drone_and_emptying
+                         (gameM, commendL, commendD, solution))
                     # We go to the next drone
                     dPointer = (dPointer + 1) % gameM.nb_drones
                     dCurent = gameM.drones[dPointer]

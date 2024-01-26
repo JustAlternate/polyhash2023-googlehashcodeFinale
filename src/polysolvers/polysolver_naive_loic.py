@@ -83,8 +83,8 @@ def naive_approach_loic(fichier_challenge: str) -> list:
 
                 # Change drone if one single drone cant
                 # finish this product type quantity.
-                current_drone_index = (
-                                              current_drone_index + 1) % (len(challenge.drones))
+                current_drone_index = (current_drone_index + 1) % \
+                                      (len(challenge.drones))
 
     # In case there is remaining actions to make in the queues.
     makeCommands(solution, queue_load, queue_deliver)
