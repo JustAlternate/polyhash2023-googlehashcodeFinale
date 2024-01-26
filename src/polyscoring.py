@@ -1,5 +1,4 @@
-from collections import defaultdict
-from math import ceil, sqrt
+from math import ceil
 
 from Objects.Map import Map
 from polyparser import parse_challenge
@@ -15,14 +14,16 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
     with open(filenameOut, "r") as f:
         # Read infos map
         nb_commands = int(f.readline())
-        commands : dict[int, list[str,int,int,int]] = {}
+        commands: dict[int, list[str, int, int, int]] = {}
         for _ in range(nb_commands):
             drone_id, action, dest_id, product_type, qty = [
                 v for v in f.readline().split()
             ]
             if int(drone_id) not in commands.keys():
-                commands[int(drone_id)] = [(str(action), int(dest_id), int(product_type), int(qty))]
-            commands[int(drone_id)].append((str(action), int(dest_id), int(product_type), int(qty))) 
+                commands[int(drone_id)] = [(str(action), int(dest_id),
+                                            int(product_type), int(qty))]
+            commands[int(drone_id)].append((str(action), int(dest_id),
+                                            int(product_type), int(qty)))
 
     # solution = naive_approach_theo(filenameOut)
 
@@ -35,23 +36,30 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
                     return
                 if action[0] == "L":
                     turn += challenge.calc_dist(
-                        challenge.drones[drone_id], challenge.warehouses[action[1]])
-                    challenge.warehouses[action[1]].stock[action[2]] -= action[3]
+                        challenge.drones[drone_id],
+                        challenge.warehouses[action[1]])
+                    challenge.warehouses[action[1]].stock[action[2]]\
+                        -= action[3]
                     challenge.drones[drone_id].stock[action[2]] += action[3]
-                    challenge.drones[drone_id].totalLoad += challenge.product_weights[action[2]] * action[3]
-                    if challenge.drones[drone_id].totalLoad > challenge.max_payload:
-                        print(f"error the drone {drone_id} exeed payload")
-                    challenge.drones[drone_id].position = challenge.warehouses[action[1]].position
-                    # challenge.orders[action[1]].products_qty[action[2]] -= action[3]
+                    challenge.drones[drone_id].totalLoad += \
+                        challenge.product_weights[action[2]] * action[3]
+                    challenge.drones[drone_id].position = \
+                        challenge.warehouses[action[1]].position
                 elif action[0] == "D":
                     turn += challenge.calc_dist(
-                        challenge.drones[drone_id], challenge.orders[action[1]])
+                        challenge.drones[drone_id],
+                        challenge.orders[action[1]])
                     challenge.drones[drone_id].stock[action[2]] -= action[3]
-                    challenge.drones[drone_id].totalLoad -= challenge.product_weights[action[2]] * action[3]
-                    challenge.drones[drone_id].position = challenge.orders[action[1]].position
-                    challenge.orders[action[1]].products_qty[action[2]] -= action[3]
+                    challenge.drones[drone_id].totalLoad -= \
+                        challenge.product_weights[action[2]] * action[3]
+                    challenge.drones[drone_id].position = \
+                        challenge.orders[action[1]].position
+                    challenge.orders[action[1]].products_qty[action[2]] -= \
+                        action[3]
                     if challenge.orders[action[1]].check_full_filled():
-                        total += ceil(((challenge.nb_turns - turn) / challenge.nb_turns)*100)
+                        total += ceil(((
+                            challenge.nb_turns - turn) / challenge.nb_turns
+                        ) * 100)
                 turn += 1
     print(total)
 
