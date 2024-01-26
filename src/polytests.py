@@ -397,7 +397,7 @@ def test_writer():
         open("solutions_test/b_busy_day_theo.test")
     )
 
-    print("Writer tests PASSED for theo")
+    printg("Writer tests PASSED for theo")
 
     Writer("challenges/a_example.in", "amedeo")
     assert set(open("solutions/solutions_amedeo/a_example.out")) == set(
@@ -409,7 +409,7 @@ def test_writer():
         open("solutions_test/b_busy_day_amedeo.test")
     )
 
-    print("Writer tests PASSED for amedeo")
+    printg("Writer tests PASSED for amedeo")
 
     printg("-> Writer tests COMPLETED")
 
