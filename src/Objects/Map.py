@@ -25,6 +25,7 @@ class Map:
 
     @staticmethod
     def calc_dist(object1, object2) -> int:
+        """Return the integer distance from 2 objects"""
         return ceil(
             sqrt(
                 (object2.position[0] - object1.position[0]) ** 2

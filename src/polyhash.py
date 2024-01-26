@@ -10,7 +10,7 @@ if __name__ == "__main__":
             + "[challenges/map.in] [solutions/map.out]"
         )
     else:
-        print("Generating solutions using " + str(sys.argv[1]))
+        print("Generating solutions using : " + str(sys.argv[1]) + "...")
 
         if len(sys.argv) >= 4:
             Writer(sys.argv[2], sys.argv[1], sys.argv[3])
@@ -19,6 +19,5 @@ if __name__ == "__main__":
                 Writer(sys.argv[2], sys.argv[1])
             else:
                 for file in os.listdir("challenges/"):
-                    if file.endswith(".in"):
-                        print("Generating solution for " + str(file))
+                    print("Generating solution for " + str(file))
                     Writer("challenges/" + str(file), sys.argv[1])

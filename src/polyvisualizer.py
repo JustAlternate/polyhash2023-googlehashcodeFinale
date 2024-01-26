@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from polyparser import parse_challenge
 
 
@@ -22,7 +20,7 @@ def map_visualizer_init(challenge):
     print(printr("X") + " = warehouse n°X")
     print("Les drones commencent toujours sur la warehouse n°0")
 
-    grid = []  # X = rien , X en rouge = warehouse n°X, X en vert = order n°X
+    grid = []  # X = None , X in red = warehouse n°X, X in gree = order n°X
     for row in range(challenge.rows - 1):
         grid.append([])
         for col in range(challenge.cols):

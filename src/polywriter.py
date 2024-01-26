@@ -1,30 +1,29 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from polysolvers import (
+    naive_approach_loic,
+    naive_approach_theo,
+    naive_approach_amedeo,
+)
 import sys
 
-from polysolvers.polysolver_autre import naive_approach_autre
-from polysolvers.polysolver_naive_loic import naive_approach_loic
-from polysolvers.polysolver_naive_theo import naive_approach_theo
 
-
-def Writer(challenge: str, method: str) -> None:
+def Writer(challenge: str, method: str, output_name: str = None) -> None:
     if method == "loic":
         solution = naive_approach_loic(challenge)
     elif method == "theo":
         solution = naive_approach_theo(challenge)
     elif method == "amedeo":
-        solution = naive_approach_autre(challenge)
+        solution = naive_approach_amedeo(challenge)
     else:
-        print("Cette algorithme n'existe pas")
+        print("This algorithm doesn't exist")
         return
 
-    # basename the challenge name and add .out at the end.
-    output_name = (
-            "solutions/" + "solutions_"
-            + str(method)
-            + "/"
-            + str(str(challenge.split("/")[-1]).split(".")[0]) + ".out"
-    )
+    # basename if no output_name specified take the
+    # challenge name and add .out at the end.
+    if output_name is None:
+        output_name = (
+                "solutions/" + "solutions_" + str(method) + "/"
+                + str(str(challenge.split("/")[-1]).split(".")[0]) + ".out"
+        )
 
     with open(output_name, "w") as f:
         # Write the number of line at the begining.

@@ -21,12 +21,16 @@ ifeq (run,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 ifeq (viz,$(firstword $(MAKECMDGOALS)))
-  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  $(eval $(RUN_ARGS):;@:)
+  VIZ_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(VIZ_ARGS):;@:)
 endif
 ifeq (generate,$(firstword $(MAKECMDGOALS)))
-  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  $(eval $(RUN_ARGS):;@:)
+  GENERATE_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(GENERATE_ARGS):;@:)
+endif
+ifeq (bench,$(firstword $(MAKECMDGOALS)))
+  BENCH_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(BENCH_ARGS):;@:)
 endif
 
 venv/bin/activate: requirements.txt
@@ -42,14 +46,14 @@ install: venv/bin/activate
 run : install
 	@echo "================="
 	@echo "Generating a solution using polywriter..."
-	$(Source) python src/polywriter.py $(RUN_ARGS)
+	source venv/bin/activate && python src/polywriter.py $(RUN_ARGS)
 	@echo "Solutions completed"
 	@echo "================="
 
 generate: install
 	@echo "================="
 	@echo "Generating every solutions..."
-	$(Source) && python src/polyhash.py $(RUN_ARGS)
+	$(Source) && python src/polyhash.py $(GENERATE_ARGS)
 	@echo "Solutions generated"
 	@echo "================="
 
@@ -70,7 +74,14 @@ tests: install
 viz: install
 	@echo "================="
 	@echo "Launching visualization..."
-	$(Source) && python src/polyvisualizer.py $(RUN_ARGS)
+	$(Source) && python src/polyvisualizer.py $(VIZ_ARGS)
+	@echo "Success"
+	@echo "================="
+
+bench: install
+	@echo "================="
+	@echo "Launching benchmarks..."
+	source venv/bin/activate && python src/polybench.py $(BENCH_ARGS)
 	@echo "Success"
 	@echo "================="
 
@@ -86,3 +97,141 @@ clean:
 	rm -f solutions_loic/*.out
 	rm -f solutions_amedeo/*.out
 	@echo "Success"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cuphead: install
+	@cat src/Objects/.cup
