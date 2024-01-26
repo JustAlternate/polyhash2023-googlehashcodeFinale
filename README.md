@@ -244,8 +244,7 @@ Explication implémentation des algorithmes :
 
 - Utilisation du **"[Tableau des tickets
   ](https://gitlab.univ-nantes.fr/E23B956N/polyhash2023/-/issues/?sort=created_date&state=all&first_page_size=100)"** de
-  Gitlab pour la **gestion des tickets**, politique de "*
-  *[demande de fusion](https://gitlab.univ-nantes.fr/E23B956N/polyhash2023/-/merge_requests?scope=all&state=all)**" pour
+  Gitlab pour la **gestion des tickets**, politique de **"[demande de fusion](https://gitlab.univ-nantes.fr/E23B956N/polyhash2023/-/merge_requests?scope=all&state=all)"** pour
   avoir un suivi de projet explicite, efficace, fonctionnel et **revue de code** par un autre membre de l'équipe à
   chaque demande de fusion.
 
