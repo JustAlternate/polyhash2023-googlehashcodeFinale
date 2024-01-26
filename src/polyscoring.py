@@ -12,7 +12,7 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
     """
 
     challenge: Map = parse_challenge(filenameIn)
-    total = 1
+    total = 0
     with open(filenameOut, "r") as f:
         # Read infos map
         nb_commands = int(f.readline())
@@ -56,9 +56,9 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
                     challenge.orders[action[1]].products_qty[action[2]] -= \
                         action[3]
                     if challenge.orders[action[1]].check_full_filled():
-                        total += ceil(((
+                        total += ceil(100 * (
                             challenge.nb_turns - turn) / challenge.nb_turns
-                        ) * 100)
+                        )
                 turn += 1
     print(str(filenameIn) + " : " + str(total))
 
@@ -107,3 +107,5 @@ if __name__ == "__main__":
         )
     elif len(sys.argv) == 2:
         score_all(sys.argv[1])
+
+score_all("amedeo",)
