@@ -294,6 +294,13 @@ Explication implémentation des algorithmes :
     - Réalisation du polyparser
 
 ## Autres informations
+Quelques chiffres concernant notre projet :
+- **54** tickets
+- **41** merge requests
+- **178** pipelines (sucess rate : 75%)
+- **43** failed pipelines
+- **318** jobs de CI  
+
 
 Il y a un total de 3 ASCII ART cuphead cachés dans le projet (code et repository), si vous les trouvez tous nous vous
 offrons une chouquette :D 
