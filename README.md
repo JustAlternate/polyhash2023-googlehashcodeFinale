@@ -9,11 +9,10 @@
 ## Descriptif général du projet
 
 Projet de développement logiciel IDIA3 sur le problème
-du [google-hash-code 2019](https://students.googleblog.com/2019/01/the-ultimate-guide-to-hash-code-2019.html)  
+du [google-hash-code 2016](https://storage.googleapis.com/coding-competitions.appspot.com/HC/2016/hashcode2016_qualification_task.pdf)  
 Réalisation de 3 algorithmes différents dans le but de générer des solutions au problème.  
 L'objectif est de contrôler une flotte de drones pour livrer des commandes dont les produits sont stockés dans des
 entrepôts.  
-La complexité réside dans l'optimisation de l'ordre des commandes à réaliser pour livrer le plus rapidement possible.
 
 Vidéo explicative :
 
@@ -125,7 +124,7 @@ python src/polybench.py every|theo|loic|amedeo [every|challenges/a_example.in]
 
 ## Détail des stratégies mises en œuvre
 
-### Stratégies fonctionnelles
+### Stratégies algorithmiques
 
 Explication implémentation des algorithmes :
 
@@ -136,10 +135,10 @@ Explication implémentation des algorithmes :
   pour faire ces clusters est la distance entre 2 orders. Donc si 2 orders sont proches on forme un cluster.
 - Le cluster a un weight_ranking (qui est égal à la somme des weight_ranking des orders) et un dist_ranking qui est la
   distance par rapport au cluster actuel.
-- Au début, on prend le cluster le plus proche de la warehouse 0
-- Ensuite, on prend chaque order du cluster
+- Au début, on prend le cluster le plus proche de la warehouse 0.
+- Ensuite, on prend chaque order du cluster.
 - On utilise un drone que l'on essaye de remplir un maximum pour compléter l'order le plus rapidement possible.
-- Une fois qu'on a complété les orders du cluster, on enlève le cluster des clusters à faire
+- Une fois qu'on a complété les orders du cluster, on enlève le cluster des clusters à compléter.
 - Puis, on regarde le meilleur cluster à faire après. On refait ainsi un classement des clusters avec la distance par
   rapport au cluster actuel. Le score global d'un cluster est pondéré par 90% de son poids total et 10% de sa distance
   avec le cluster actuel.
@@ -149,9 +148,9 @@ Explication implémentation des algorithmes :
 #### **Algorithme Loïc** :
 
 - On trie la liste des orders par distance par rapport à la position de la warehouse 0 dans un premier prétraitement.
-- Pour chaque orders dans la liste des orders triée :
-- On cycle sur les produits un par un en assignant un drone par type de produit
-- quand il n'y a plus de drones disponibles, on livre les produits en faisant attention de toujours utiliser la
+- Pour chaque orders dans la liste des orders triée :  
+  - On cycle sur les produits un par un en assignant un drone par type de produit.
+  - Quand il n'y a plus de drones disponibles, on livre les produits en faisant attention de toujours utiliser la
   warehouse la plus proche.
 
 #### **Algorithme Amedeo** :
@@ -212,16 +211,16 @@ Explication implémentation des algorithmes :
     - **Objects/** : dossier regroupant nos implémentations objets.
         - **Cluster.py** : cluster d'orders
         - **Drone.py**
-        - **Map.py** : objet général qui contient l'ensemble des informations du problème
+        - **Map.py** : objet général qui contient l'ensemble des informations du problème.
         - **Order.py**
         - **Warehouse.py**
     - **polysolvers/** : dossier regroupant nos générateurs de solutions.
-        - **polysolver_naive_theo** : Algorithme final de Théo
-        - **polysolver_naive_loic** : Algorithme naïf de Loïc
-        - **polysolver_naive_amedeo** : Algorithme naïf de Amedeo
+        - **polysolver_naive_theo** : Algorithme final de Théo.
+        - **polysolver_naive_loic** : Algorithme naïf de Loïc.
+        - **polysolver_naive_amedeo** : Algorithme naïf de Amedeo.
     - **polybench.py** : calculs de temps et mémoire des différents algorithmes.
     - **polyhash.py** : interface homme-machine qui génère des solutions.
-    - **polyparser.py** : parse un fichier d'entrée du dossier **challenges/** en utilisant nos implémentations objets
+    - **polyparser.py** : parse un fichier d'entrée du dossier **challenges/** en utilisant nos implémentations objets.
     - **polytests.py** : l'ensemble de nos tests sur les objets, méthodes d'objets, fonctions et modules du projet.
     - **polyvisualizer.py** : visualisation de fichier d'entrée de taille inférieure à 30x30.
     - **polywriter.py** : écrit des solutions dans un fichier **.out** et le place dans les dossiers **solutions/**.
@@ -266,7 +265,7 @@ Explication implémentation des algorithmes :
     - Participation à la refactorisation du code
     - Particpation au typing sur les fichiers
     - Participation au README.md
-    - Participation à la vidéo (montage finale et animations diaporama)
+    - Contribution majoritaire pour la vidéo
 
 - Loïc WEBER :
 
@@ -296,8 +295,8 @@ Explication implémentation des algorithmes :
 
 ## Autres informations
 
-Il y a un total de 3 ASCII ART cuphead cachés dans le projet (code et repository), si vous les trouvez tous on vous
-offre une chouquette :D
+Il y a un total de 3 ASCII ART cuphead cachés dans le projet (code et repository), si vous les trouvez tous nous vous
+offrons une chouquette :D 
 
-Assets et musiques du jeu cuphead :  
+Assets et musiques du jeu CupHead :  
 © 2022 StudioMDHR Entertainment Inc. All Rights Reserved.
