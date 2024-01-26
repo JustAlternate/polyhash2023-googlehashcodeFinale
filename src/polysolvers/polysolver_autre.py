@@ -11,9 +11,9 @@ from utils.functs import sort_objects_by_distance_from_obj, makeCommand
 
 def naive_approach_autre(challenge):
     """
-    Naive approach that use every drones one by one
-    and cycle through each orders
-    one by one and each product_type one by one.
+    Naive algorithm where we iterate over the orders, sorted by weight to start with the fastest to finish. The
+    nearest Warehouses are calculated. Each product type is iterated over. Then the current drone is filled,
+    and if it's full, the next one is taken. Once all the drones are full, we empty them.
     """
     solution = []
     gameM: Map = parse_challenge(challenge)
@@ -58,14 +58,13 @@ def naive_approach_autre(challenge):
                     wCurent.stock[prodT],
                     oCurent.products_qty[prodT])
 
-                # print("order :", oIndex / len(oWeightSort), "num", oIndex, "sur", len(oWeightSort), "poid",(gameM.product_weights[prodT] * qtyL))
-
                 # if the drone is full if we add more of this product
                 while dCurent.total_load + (gameM.product_weights[prodT] * qtyL) > gameM.max_payload:
                     # if all drones are full
                     if (dPointer + 1) % gameM.nb_drones == 0:
                         # We empty the drones and add write the commands to the solution
                         dDroneEstVide(gameM, commendL, commendD, solution)
+                    # We go to the next drone
                     dPointer = (dPointer + 1) % gameM.nb_drones
                     dCurent = gameM.drones[dPointer]
 
@@ -88,25 +87,27 @@ def naive_approach_autre(challenge):
 
 # We empty the drones and add commands to the solution
 def dDroneEstVide(gameM, commendL, commendD, solution):
+    # set of drones to remove from the order
     remove = set()
     for o in gameM.orders:
         for d in o.drones:
+            # set to 0
             remove.clear()
             for prodT, prodQTY in enumerate(d.stock):
+                # if there is still product of this type in the drone
                 if prodQTY > 0:
-                    if d.total_load > gameM.max_payload:
-                        print(d.total_load, " pas  plus que ", gameM.max_payload)
-                        print(d.index, o.index, prodT, prodQTY)
-                    assert d.total_load <= gameM.max_payload
-                    # print("dDrone : ", d.index, "order : ", o.index)
+                    # We add the deliver command to the deliver list
                     commendD.append((d.index, o.index, prodT, prodQTY))
-                    # On remove 1 objet de order
+                    # the product is removed from the order
                     o.products_qty[prodT] -= prodQTY
-                    # On supprime 1 objet au drone
+                    # the product is removed from the drone
                     d.stock[prodT] -= prodQTY
                     d.total_load -= gameM.product_weights[prodT] * prodQTY
+            # we add the drone to the set of drones to remove from the order
             remove.add(d)
+        # we remove the drones from the order
         o.drones -= remove
+    # we add the commands to the solution
     for c in commendL:
         makeCommand("L", solution, *c)
     commendL.clear()
