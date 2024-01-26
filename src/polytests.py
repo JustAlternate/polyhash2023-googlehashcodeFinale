@@ -430,7 +430,7 @@ if __name__ == "__main__":
     print('\nTesting solutions for each approach')
     test_naive_loic()
     test_naive_theo()
-    # test_naive_amedeo() car je vais repartir sur des base propre
+    test_naive_amedeo()
 
     print('\nTesting Writer...')
     test_writer()

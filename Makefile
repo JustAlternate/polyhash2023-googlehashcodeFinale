@@ -81,7 +81,7 @@ viz: install
 bench: install
 	@echo "================="
 	@echo "Launching benchmarks..."
-	source venv/bin/activate && python src/polybench.py $(BENCH_ARGS)
+	$(Source) && python src/polybench.py $(BENCH_ARGS)
 	@echo "Success"
 	@echo "================="
 
