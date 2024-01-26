@@ -1,16 +1,17 @@
 from math import ceil, sqrt
 
-from src.polyparser import parse_challenge
+from polyparser import parse_challenge
 
 
-def parse_solution_challenge(filename: str):
+def parse_solution_challenge(filenameIn: str, filenameOut: str):
     """Read a solution file and parse the informations in the Map class.
     """
 
     from src.Objects.Map import Map
-    challenge : Map = parse_challenge(filename)
+    challenge : Map = parse_challenge(filenameIn)
     turn = 0
-    with open(filename, "r") as f:
+    total = 0
+    with open(filenameOut, "r") as f:
         # Read infos map
         nb_commands = int(f.readline())
         commands = {}
@@ -28,28 +29,22 @@ def parse_solution_challenge(filename: str):
 
         for drone_id,drone_action in commands:
             for action in drone_action:
-                drone = challenge.drones[drone_action]
                 if action[0] == "L":
-                    challenge.calc_dist([action[1]],)
+                    turn += challenge.calc_dist(challenge.drones[drone_id],challenge.warehouses[action[1]])
                     challenge.warehouses[action[1]].stock[action[2]] -= action[3]
-                    challenge.drones[action[1]].stock[action[2]] += action[3]
+                    challenge.drones[drone_id].stock[action[2]] += action[3]
                     challenge.drones[drone_id].totalLoad += challenge.product_weights[action[2]] * action[3]
-                    challenge.orders[prodT] -= qtyL
-                    drone.stock[action[2]] += action[3]
-                    warehouse.stock[action[2]] -= action[3]
+                    challenge.drones[drone_id].position = challenge.warehouses[action[1]].position
+                    # challenge.orders[action[1]].products_qty[action[2]] -= action[3]
                 elif action[0] == "D":
-                    order = challenge.orders[action[1]]
-                    drone = challenge.drones[drone_action]
-                    drone.position = order.position
-                    drone.stock[action[2]] -= action[3]
-                    order.products_qty[action[2]] -= action[3]
+                    turn += challenge.calc_dist(challenge.drones[drone_id],challenge.warehouses[action[1]])
+                    challenge.drones[drone_id].stock[action[2]] -= action[3]
+                    challenge.drones[drone_id].totalLoad -= challenge.product_weights[action[2]] * action[3]
+                    challenge.drones[drone_id].position = challenge.orders[action[1]].position
+                    # challenge.orders[action[1]].products_qty[action[2]] -= action[3]
                 turn += 1
-
-                turn = ceil(
-                sqrt(
-                    (action - object1.position[0]) ** 2
-                    + (object2.position[1] - object1.position[1]) ** 2
-                )
-
-
-        return commands
+                if challenge.orders[action[1]].check_full_filled:
+                    total += ((challenge.nb_turns - turn)/challenge.nb_turns)*100
+        return total
+    
+    print(parse_solution_challenge("challenges/d_mother_of_all_warehouse.in","challenges/solutions_theo/d_mother_of_all_warehouses.out"))
