@@ -82,8 +82,8 @@ def score_all(method: str = None, challenge: str = None):
             print("===========")
             print("Using " + str(algo) + " algorithm...")
             for file in challenge_to_bench:
-                Writer(file, algo, "solutions/" +
-                       str(file.split("/")[-1]) + ".out")
+                Writer(file, algo, "solutions/"
+                       + str(file.split("/")[-1]) + ".out")
                 parse_solution_challenge(
                     file, "solutions/" + str(file.split("/")[-1]) + ".out"
                 )
@@ -91,8 +91,8 @@ def score_all(method: str = None, challenge: str = None):
         print("===========")
         print("Using " + str(method) + " algorithm...")
         for file in challenge_to_bench:
-            Writer(file, method, "solutions/" +
-                   str(file.split("/")[-1]) + ".out")
+            Writer(file, method, "solutions/"
+                   + str(file.split("/")[-1]) + ".out")
             parse_solution_challenge(
                 file, "solutions/" + str(file.split("/")[-1]) + ".out"
             )
