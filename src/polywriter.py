@@ -30,11 +30,3 @@ def Writer(challenge: str, method: str, output_name: str = None) -> None:
         f.write(str(len(solution)) + "\n")
         for line in solution:
             f.write(line + "\n")
-
-
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("usage: python polywriter.py \
-        loic | theo | amedeo challenges/ma_map.in ")
-    else:
-        Writer(sys.argv[2], sys.argv[1])
