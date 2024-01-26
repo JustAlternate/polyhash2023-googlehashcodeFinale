@@ -10,7 +10,7 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
     """
 
     challenge: Map = parse_challenge(filenameIn)
-    total = 0
+    total = 1
     print(total)
     with open(filenameOut, "r") as f:
         # Read infos map
@@ -39,6 +39,8 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
                     challenge.warehouses[action[1]].stock[action[2]] -= action[3]
                     challenge.drones[drone_id].stock[action[2]] += action[3]
                     challenge.drones[drone_id].totalLoad += challenge.product_weights[action[2]] * action[3]
+                    if challenge.drones[drone_id].totalLoad > challenge.max_payload:
+                        print(f"error the drone {drone_id} exeed payload")
                     challenge.drones[drone_id].position = challenge.warehouses[action[1]].position
                     # challenge.orders[action[1]].products_qty[action[2]] -= action[3]
                 elif action[0] == "D":
