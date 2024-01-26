@@ -24,11 +24,14 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
             if int(drone_id) not in commands.keys():
                 commands[int(drone_id)] = [(str(action), int(dest_id),
                                             int(product_type), int(qty))]
-            commands[int(drone_id)].append((str(action), int(dest_id),
-                                            int(product_type), int(qty)))
+            else:  
+                commands[int(drone_id)].append((str(action), int(dest_id),  
+                                                int(product_type), int(qty)))
+                
+        turn_order = [1 for _ in range(len(challenge.orders))]
 
         for drone_id, drone_action in commands.items():
-            turn = 0
+            turn = 1
             for action in drone_action:
                 # if turn > challenge.nb_turns:
                 #     print(str(filenameIn) + " : " + str(total))
@@ -56,9 +59,11 @@ def parse_solution_challenge(filenameIn: str, filenameOut: str):
                     challenge.orders[action[1]].products_qty[action[2]] -= \
                         action[3]
                     if challenge.orders[action[1]].check_full_filled():
-                        total += ceil(100 * (
+                        totalactuel = ceil(100 * (
                             challenge.nb_turns - turn) / challenge.nb_turns
                         )
+                        total += totalactuel
+                        print("turn", turn, "score", totalactuel)
                 turn += 1
     print(str(filenameIn) + " : " + str(total))
 
