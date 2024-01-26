@@ -9,7 +9,7 @@ if __name__ == "__main__":
             + "[challenges/map.in] [solutions/map.out]"
         )
     else:
-        print("Generating solutions using " + str(sys.argv[1]))
+        print("Generating solutions using : " + str(sys.argv[1]) + "...")
 
         if len(sys.argv) >= 4:
             Writer(sys.argv[2], sys.argv[1], sys.argv[3])

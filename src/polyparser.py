@@ -1,16 +1,8 @@
 from Objects import Map, Order, Drone, Warehouse
 
-"""
-Module de parsing des fichiers d'entrée pour
-la mise en oeuvre du projet Poly#.
-"""
-
 
 def parse_challenge(filename: str) -> Map:
-    """Lit un fichier de challenge et extrait les informations nécessaires.
-
-    Vous pouvez choisir la structure de données structurées qui va
-    représenter votre challenge: dictionnaire, objet, etc
+    """Read a challenge file and parse the informations in the Map class.
     """
     with open(filename, "r") as f:
         # Read infos map

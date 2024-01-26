@@ -146,13 +146,13 @@ def test_find_closest_warehouse():
     m = parse_challenge("challenges/test_utils.in")
     # Using test_utils challenge, closest warehouse for product type 0 and
     # quantity 1 should be warehouse 0
-    assert find_closest_warehouse(m, 0, 0, 1)[0].id == 0
+    assert find_closest_warehouse(m, 0, 0, 1)[0].index == 0
     # closest warehouse for product type 2 and quantity 1 should be warehouse 1
-    assert find_closest_warehouse(m, 0, 2, 1)[0].id == 1
+    assert find_closest_warehouse(m, 0, 2, 1)[0].index == 1
     # closest warehouse for product type 1 and quantity 1 should be warehouse 0
-    assert find_closest_warehouse(m, 0, 1, 1)[0].id == 0
+    assert find_closest_warehouse(m, 0, 1, 1)[0].index == 0
     # closest warehouse for product type 0 and quantity 1 should be warehouse 0
-    assert find_closest_warehouse(m, 0, 0, 5)[0].id == 0
+    assert find_closest_warehouse(m, 0, 0, 5)[0].index == 0
     printg("find_closest_warehouse tests PASSED")
 
 
@@ -266,9 +266,9 @@ def test_sort_orders_by_weight():
 
     orders = sort_orders_by_weight(orders)
 
-    assert orders[0].id == 1
-    assert orders[1].id == 2
-    assert orders[2].id == 0
+    assert orders[0].index == 1
+    assert orders[1].index == 2
+    assert orders[2].index == 0
 
     printg("sort_orders_by_weight tests PASSED")
 
@@ -278,11 +278,11 @@ def test_rank_orders_by_weight():
     orders = m.orders
     orders = rank_orders_by_weight(m, orders)
 
-    assert orders[0].id == 1
+    assert orders[0].index == 1
     assert round(orders[0].weight_ranking, 2) == 1.00
-    assert orders[1].id == 2
+    assert orders[1].index == 2
     assert round(orders[1].weight_ranking, 2) == 0.67
-    assert orders[2].id == 0
+    assert orders[2].index == 0
     assert round(orders[2].weight_ranking, 2) == 0.33
 
     printg("rank_orders_by_weight tests PASSED")
@@ -409,7 +409,7 @@ def test_writer():
         open("solutions_test/b_busy_day_amedeo.test")
     )
 
-    printg("Writer tests PASSED for naive_amedeo")
+    printg("Writer tests PASSED for amedeo")
 
     printg("-> Writer tests COMPLETED")
 

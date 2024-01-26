@@ -31,8 +31,8 @@ def naive_approach_theo(challenge: str) -> List[str]:
     solution = []
     challenge = parse_challenge(challenge)
 
-    weightcoeff = 0.9  # The importance of weight in the ranking
-    distcoeff = 0.1  # The importance of distance in the ranking
+    WEIGHTCOEFF = 0.9  # The importance of weight in the ranking
+    DISTCOEFF = 0.1  # The importance of distance in the ranking
     IDEAL_CLUSTER_SIZE = 2  # 2 is the best for now
 
     orders = challenge.orders
@@ -41,7 +41,7 @@ def naive_approach_theo(challenge: str) -> List[str]:
     orders = rank_orders_by_weight(challenge, orders)
 
     # Creating clusters
-    clusters = create_clusters(challenge, orders, weightcoeff, distcoeff,
+    clusters = create_clusters(challenge, orders, WEIGHTCOEFF, DISTCOEFF,
                                IDEAL_CLUSTER_SIZE)
 
     # Completing orders for each cluster
@@ -93,7 +93,7 @@ def naive_approach_theo(challenge: str) -> List[str]:
                         if qty > 0:
                             warehouse, qty = find_closest_warehouse(
                                 challenge,
-                                drone.id,
+                                drone.index,
                                 product_type,
                                 qty
                             )
@@ -105,8 +105,8 @@ def naive_approach_theo(challenge: str) -> List[str]:
                             makeCommand(
                                 "L",
                                 solution,
-                                drone.id,
-                                warehouse.id,
+                                drone.index,
+                                warehouse.index,
                                 product_type,
                                 qty,
                             )
@@ -124,8 +124,8 @@ def naive_approach_theo(challenge: str) -> List[str]:
                         makeCommand(
                             "D",
                             solution,
-                            drone.id,
-                            order.id,
+                            drone.index,
+                            order.index,
                             product_type,
                             qty_prod
                         )
