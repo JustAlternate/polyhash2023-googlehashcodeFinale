@@ -8,7 +8,7 @@ endif
 else
    ifeq ($(shell uname), Linux)
 	  SHELL := /bin/bash
-      Source := $(Source)
+      Source := source venv/bin/activate
    endif
 endif
 
