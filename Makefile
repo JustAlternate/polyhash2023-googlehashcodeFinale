@@ -13,13 +13,6 @@ else
 endif
 
 #https://stackoverflow.com/questions/2214575/passing-arguments-to-make-run
-# If the first argument is "run"...
-ifeq (run,$(firstword $(MAKECMDGOALS)))
-  # use the rest as arguments for "run"
-  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  # ...and turn them into do-nothing targets
-  $(eval $(RUN_ARGS):;@:)
-endif
 ifeq (viz,$(firstword $(MAKECMDGOALS)))
   VIZ_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(VIZ_ARGS):;@:)
@@ -42,13 +35,6 @@ venv/bin/activate: requirements.txt
 	@echo "================="
 
 install: venv/bin/activate
-
-run : install
-	@echo "================="
-	@echo "Generating a solution using polywriter..."
-	source venv/bin/activate && python src/polywriter.py $(RUN_ARGS)
-	@echo "Solutions completed"
-	@echo "================="
 
 generate: install
 	@echo "================="

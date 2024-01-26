@@ -1,5 +1,4 @@
 # Projet Polyhash2023 Team S - CupSTeam
-
 ## L'équipe
 
 - Théo Masselot - theo.masselot@etu.univ-nantes.fr
@@ -58,12 +57,6 @@ make generate theo|loic|amedeo
 ```
 
 Les solutions seront écrites dans le dossier `solutions`
-
-- Pour générer une solution en particulière avec un algorithme (polywriter.py) :
-
-```sh
-make run theo|loic|amedeo challenges/a_example.in
-```
 
 - Pour lancer notre module de tests (polytests.py) :
 
