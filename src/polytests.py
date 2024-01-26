@@ -392,10 +392,24 @@ def test_writer():
         open("solutions_test/a_example_theo.test")
     )
 
-    Writer("challenges/b_busy_day.in", "theo")
+    Writer("challenges/a_example.in", "theo")
     assert set(open("solutions/solutions_theo/b_busy_day.out")) == set(
         open("solutions_test/b_busy_day_theo.test")
     )
+
+    print("Writer tests PASSED for theo")
+
+    Writer("challenges/a_example.in", "amedeo")
+    assert set(open("solutions/solutions_amedeo/a_example.out")) == set(
+        open("solutions_test/a_example_amedeo.test")
+    )
+
+    Writer("challenges/b_busy_day.in", "amedeo")
+    assert set(open("solutions/solutions_amedeo/b_busy_day.out")) == set(
+        open("solutions_test/b_busy_day_amedeo.test")
+    )
+
+    print("Writer tests PASSED for amedeo")
 
     printg("-> Writer tests COMPLETED")
 
