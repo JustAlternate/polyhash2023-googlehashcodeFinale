@@ -16,7 +16,7 @@ entrepôts.
 
 Vidéo explicative :
 
-![](https://justalternate.fr/polyhash.mp4)
+![](https://justalternate.fr/vids_and_photos/polyhash.mp4)
 
 ## Prérequis / Procédure d'installation
 
